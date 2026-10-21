@@ -12,6 +12,20 @@ export default [
       '@typescript-eslint/array-type': 'off',
       '@typescript-eslint/require-await': 'off',
       'pnpm/json-enforce-catalog': 'off',
+      'import/newline-after-import': 'error',
+      '@stylistic/padding-line-between-statements': [
+        'error',
+        {
+          blankLine: 'always',
+          prev: '*',
+          next: ['function', 'export', 'interface', 'type'],
+        },
+        {
+          blankLine: 'always',
+          prev: ['function', 'export', 'interface', 'type'],
+          next: '*',
+        },
+      ],
     },
   },
   {
