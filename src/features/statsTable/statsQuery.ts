@@ -2,9 +2,7 @@ import Papa from 'papaparse'
 import { queryOptions, useSuspenseQueries } from '@tanstack/react-query'
 import { playersQueryOptions } from '#/features/players/playersQuery'
 import type { PlayerRow } from '#/features/players/playersQuery'
-
-const STATS_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vR8VCJuDwVv_npRVDvUTVK-GFhFz9-K13lIbvH0MaMh-0AqxLiITt7nJ2T8-DEXlcCHgSek9dtHHAYn/pub?gid=462371454&single=true&output=csv'
+import { apiConfig } from '#/config/apiConfig'
 
 export type StatsRow = {
   id: number
@@ -63,7 +61,7 @@ function addPlayerName(
 async function fetchStats({ signal }: { signal?: AbortSignal } = {}): Promise<
   StatsRow[]
 > {
-  const response = await fetch(STATS_CSV_URL, { signal })
+  const response = await fetch(apiConfig.stats, { signal })
 
   if (!response.ok) {
     throw new Error(
