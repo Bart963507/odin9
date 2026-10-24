@@ -1,11 +1,14 @@
 import { Table } from '@mantine/core'
+import { useNavigate } from '@tanstack/react-router'
 import type { PlayerStatsRow } from './statsQuery'
+import classes from './statsTable.module.css'
 
 type StatsTableProps = {
   rows: PlayerStatsRow[]
 }
 
 export function StatsTable({ rows }: StatsTableProps) {
+  const navigate = useNavigate()
   const headers = rows.length > 0 ? mapColumns(rows[0]) : []
 
   return (
@@ -20,7 +23,16 @@ export function StatsTable({ rows }: StatsTableProps) {
         </Table.Thead>
         <Table.Tbody>
           {rows.map((row) => (
-            <Table.Tr key={row.id}>
+            <Table.Tr
+              key={row.id}
+              className={classes.row}
+              onClick={() =>
+                navigate({
+                  to: '/players/$playerId',
+                  params: { playerId: String(row.player_id) },
+                })
+              }
+            >
               {mapColumns(row).map((column) => (
                 <Table.Td key={column.key}>{column.value}</Table.Td>
               ))}
