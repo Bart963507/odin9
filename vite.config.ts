@@ -6,6 +6,7 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 
 const config = defineConfig({
+  base: '/odin9/',
   resolve: { tsconfigPaths: true },
   plugins: [
     devtools(),
