@@ -24,7 +24,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
       <Card.Section className={classes.top}>
         <Image
           src={playerPhotoUrl(player)}
-          fallbackSrc="/player.png"
+          fallbackSrc={`${import.meta.env.BASE_URL}player.png`}
           alt=""
           fit="contain"
           className={classes.photo}
