@@ -1,0 +1,27 @@
+.banner {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  border-radius: var(--mantine-radius-md);
+  background: linear-gradient(
+    115deg,
+    var(--mantine-color-red-7) 55%,
+    var(--mantine-color-red-8) 55%
+  );
+}
+
+.bannerText {
+  position: absolute;
+  left: var(--mantine-spacing-xl);
+  bottom: var(--mantine-spacing-xl);
+  color: var(--mantine-color-white);
+}
+
+.photo {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+  object-position: bottom right;
+}

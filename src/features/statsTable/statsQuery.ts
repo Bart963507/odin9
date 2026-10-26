@@ -23,7 +23,7 @@ export interface PlayerStatsRow extends StatsRow {
   last_name: string
 }
 
-const statsQueryOptions = queryOptions({
+export const statsQueryOptions = queryOptions({
   queryKey: ['stats'],
   queryFn: ({ signal }) => fetchStats({ signal }),
 })

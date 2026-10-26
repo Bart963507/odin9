@@ -1,0 +1,15 @@
+.rows {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: var(--mantine-spacing-xs);
+  column-gap: var(--mantine-spacing-md);
+}
+
+.label {
+  color: var(--mantine-color-dimmed);
+}
+
+.value {
+  font-weight: 700;
+  text-align: right;
+}

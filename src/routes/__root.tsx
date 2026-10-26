@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NavLinks } from '#/components/navLinks'
 
 import '@mantine/core/styles.css'
+import '@mantine/charts/styles.css'
 
 const queryClient = new QueryClient()
 
