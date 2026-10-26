@@ -6,7 +6,6 @@ import {
   formatMarketValue,
   marketValue,
   marketValueHistory,
-  marketValueRank,
   seasonGameCount,
 } from './marketValue'
 import { ProfileSection } from '../profileSection/profileSection'
@@ -24,7 +23,6 @@ export function MarketValueSection({
   events,
 }: MarketValueSectionProps) {
   const value = marketValue(stats)
-  const rank = marketValueRank(stats, allStats)
   const history = marketValueHistory(
     stats,
     events,
@@ -41,9 +39,6 @@ export function MarketValueSection({
           <Text size="sm">Actuele marktwaarde:</Text>
           <Text className={classes.marketValue}>
             {formatMarketValue(value.total)}
-          </Text>
-          <Text size="sm" mt={4}>
-            Rang in selectie: <b>#{rank}</b> van {allStats.length}
           </Text>
         </div>
         <div>

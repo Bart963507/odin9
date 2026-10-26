@@ -54,7 +54,6 @@ function mapColumns(row: PlayerStatsRow): StatsColumn[] {
   return [
     { key: 'name', label: 'Naam', value: `${row.first_name} ${row.last_name}` },
     { key: 'games_played', label: 'Wedstrijden', value: row.games_played },
-    { key: 'ninety_min', label: '90 minuten', value: row.ninety_min },
     { key: 'goals', label: 'Doelpunten', value: row.goals },
     { key: 'assists', label: 'Assists', value: row.assists },
     { key: 'own_goals', label: 'Eigen doelpunten', value: row.own_goals },

@@ -13,7 +13,6 @@ export type StatsRow = {
   red_cards: number
   throwins_failed: number
   games_played: number
-  ninety_min: number
   assists: number
   injuries: number
 }

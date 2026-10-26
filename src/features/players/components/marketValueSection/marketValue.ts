@@ -6,7 +6,6 @@ const MIN_VALUE = 10_000
 
 const MARKET_VALUE_WEIGHTS = [
   { key: 'games_played', label: 'Wedstrijden', weight: 25_000 },
-  { key: 'ninety_min', label: '90 minuten', weight: 15_000 },
   { key: 'goals', label: 'Doelpunten', weight: 100_000 },
   { key: 'assists', label: 'Assists', weight: 60_000 },
   { key: 'own_goals', label: 'Eigen doelpunten', weight: -50_000 },
@@ -43,12 +42,6 @@ export function marketValue(stats: StatsRow): MarketValue {
   return { total: Math.max(sum, MIN_VALUE), breakdown }
 }
 
-export function marketValueRank(stats: StatsRow, allStats: StatsRow[]): number {
-  const total = marketValue(stats).total
-
-  return allStats.filter((row) => marketValue(row).total > total).length + 1
-}
-
 // Stats that are also recorded per game in the events sheet.
 const EVENT_STATS: Record<EventType, keyof StatsRow> = {
   goal: 'goals',
@@ -67,7 +60,7 @@ export type MarketValuePoint = {
 
 /**
  * Market value after every game. Event-based stats land on the game they
- * happened in; stats without events (games played, 90 minutes, throw-ins)
+ * happened in; stats without events (games played, throw-ins)
  * have no game, so they are spread evenly over the season.
  */
 export function marketValueHistory(

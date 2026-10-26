@@ -52,18 +52,12 @@ export function PlayerProfile({
 function profileRows(stats: StatsRow): ProfileRow[] {
   return [
     { key: 'games_played', label: 'Wedstrijden', value: stats.games_played },
-    { key: 'ninety_min', label: '90 minuten', value: stats.ninety_min },
-    {
-      key: 'ninety_min_pct',
-      label: '% volle wedstrijden',
-      value: perGame(stats.ninety_min, stats.games_played, 'percent'),
-    },
     { key: 'goals', label: 'Doelpunten', value: stats.goals },
     { key: 'assists', label: 'Assists', value: stats.assists },
     {
       key: 'goals_per_game',
       label: 'Doelpunten per wedstrijd',
-      value: perGame(stats.goals, stats.games_played, 'decimal'),
+      value: perGame(stats.goals, stats.games_played),
     },
   ]
 }
@@ -82,17 +76,10 @@ function disciplineRows(stats: StatsRow): ProfileRow[] {
   ]
 }
 
-function perGame(
-  count: number,
-  games: number,
-  style: 'percent' | 'decimal',
-): string {
+function perGame(count: number, games: number): string {
   if (!games) {
     return '–'
   }
 
-  return (count / games).toLocaleString('nl-NL', {
-    style,
-    maximumFractionDigits: style === 'percent' ? 0 : 2,
-  })
+  return (count / games).toLocaleString('nl-NL', { maximumFractionDigits: 2 })
 }
