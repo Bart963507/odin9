@@ -1,7 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Alert, Loader, Text, Title } from '@mantine/core'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { Alert, Loader, Text } from '@mantine/core'
+import { useSuspenseQueries } from '@tanstack/react-query'
 import { playersQueryOptions } from '#/features/players/playersQuery'
+import { statsQueryOptions } from '#/features/statsTable/statsQuery'
+import { eventsQueryOptions } from '#/features/events/eventsQuery'
+import { PlayerProfile } from '#/features/players/playerProfile'
 
 export const Route = createFileRoute('/players/$playerId')({
   component: PlayerPage,
@@ -15,7 +18,10 @@ export const Route = createFileRoute('/players/$playerId')({
 
 function PlayerPage() {
   const { playerId } = Route.useParams()
-  const { data: players } = useSuspenseQuery(playersQueryOptions)
+  const [{ data: players }, { data: stats }, { data: events }] =
+    useSuspenseQueries({
+      queries: [playersQueryOptions, statsQueryOptions, eventsQueryOptions],
+    })
   const player = players.find((p) => p.id === Number(playerId))
 
   if (!player) {
@@ -23,8 +29,11 @@ function PlayerPage() {
   }
 
   return (
-    <Title>
-      {player.first_name} {player.last_name}
-    </Title>
+    <PlayerProfile
+      player={player}
+      stats={stats.find((row) => row.player_id === player.id)}
+      allStats={stats}
+      events={events}
+    />
   )
 }

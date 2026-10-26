@@ -40,7 +40,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
   )
 }
 
-function playerPhotoUrl(player: PlayerRow): string {
+export function playerPhotoUrl(player: PlayerRow): string {
   const slug = `${player.first_name} ${player.last_name}`
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')

@@ -15,6 +15,7 @@
     "check": "prettier --check ."
   },
   "dependencies": {
+    "@mantine/charts": "^9.7.4",
     "@mantine/core": "^9.7.3",
     "@mantine/hooks": "^9.7.3",
     "@tanstack/react-devtools": "0.10.13",
@@ -23,7 +24,8 @@
     "@tanstack/react-router-devtools": "1.167.2",
     "papaparse": "^5.7.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "@tanstack/devtools-vite": "0.8.5",

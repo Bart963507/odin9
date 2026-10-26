@@ -13,7 +13,6 @@ export type StatsRow = {
   red_cards: number
   throwins_failed: number
   games_played: number
-  ninety_min: number
   assists: number
   injuries: number
 }
@@ -23,7 +22,7 @@ export interface PlayerStatsRow extends StatsRow {
   last_name: string
 }
 
-const statsQueryOptions = queryOptions({
+export const statsQueryOptions = queryOptions({
   queryKey: ['stats'],
   queryFn: ({ signal }) => fetchStats({ signal }),
 })
