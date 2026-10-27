@@ -94,16 +94,17 @@ export function marketValueHistory(
   }
 
   const points: MarketValuePoint[] = []
+  const currentValue = marketValue(stats).total
   let eventTotal = 0
   for (let game = 0; game <= seasonGames; game++) {
     eventTotal += eventAmountByGame.get(game) ?? 0
     points.push({
       game,
       label: game === 0 ? 'Start' : `W${game}`,
-      value: Math.max(
-        BASE_VALUE + spreadPerGame * game + eventTotal,
-        MIN_VALUE,
-      ),
+      value:
+        game === seasonGames
+          ? currentValue
+          : Math.max(BASE_VALUE + spreadPerGame * game + eventTotal, MIN_VALUE),
     })
   }
 
