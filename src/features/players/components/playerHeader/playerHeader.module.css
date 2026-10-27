@@ -13,8 +13,62 @@
 .bannerText {
   position: absolute;
   left: var(--mantine-spacing-xl);
+  right: var(--mantine-spacing-xl);
   bottom: var(--mantine-spacing-xl);
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--mantine-spacing-lg);
   color: var(--mantine-color-white);
+}
+
+.name {
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.details {
+  display: flex;
+  min-width: 0;
+  align-items: flex-end;
+  gap: var(--mantine-spacing-sm);
+}
+
+.metadata {
+  min-width: 0;
+}
+
+.metaValue {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shirtNumber {
+  display: grid;
+  width: 55px;
+  height: 42px;
+  flex: 0 0 auto;
+  place-items: center;
+  padding-top: 6px;
+  color: var(--mantine-color-white);
+  font-size: var(--mantine-font-size-sm);
+  font-weight: 800;
+  line-height: 1;
+  clip-path: polygon(
+    27% 0,
+    39% 10%,
+    61% 10%,
+    73% 0,
+    100% 20%,
+    84% 40%,
+    73% 33%,
+    73% 100%,
+    27% 100%,
+    27% 33%,
+    16% 40%,
+    0 20%
+  );
 }
 
 .photo {
