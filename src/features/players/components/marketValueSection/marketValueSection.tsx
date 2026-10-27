@@ -31,6 +31,8 @@ export function MarketValueSection({
   const highest = history.reduce((max, point) =>
     point.value > max.value ? point : max,
   )
+  const currentIsHighest = value.total > highest.value
+  const highestValue = Math.max(value.total, highest.value)
 
   return (
     <ProfileSection title="Marktwaarde">
@@ -46,12 +48,14 @@ export function MarketValueSection({
             Hoogste marktwaarde:
           </Text>
           <Text fw={700} ta="right">
-            {formatMarketValue(highest.value)}
+            {formatMarketValue(highestValue)}
           </Text>
           <Text size="xs" c="dimmed" ta="right">
-            {highest.game === 0
-              ? 'Seizoensstart'
-              : `Na wedstrijd ${highest.game}`}
+            {currentIsHighest
+              ? 'Actueel'
+              : highest.game === 0
+                ? 'Seizoensstart'
+                : `Na wedstrijd ${highest.game}`}
           </Text>
         </div>
       </Group>

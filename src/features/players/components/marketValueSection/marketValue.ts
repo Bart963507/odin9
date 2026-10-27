@@ -11,8 +11,9 @@ const MARKET_VALUE_WEIGHTS = [
   { key: 'own_goals', label: 'Eigen doelpunten', weight: -50_000 },
   { key: 'yellow_cards', label: 'Gele kaarten', weight: -10_000 },
   { key: 'red_cards', label: 'Rode kaarten', weight: -40_000 },
-  { key: 'throwins_failed', label: 'Mislukte ingooien', weight: -5_000 },
+  { key: 'throwins_failed', label: 'Mislukte inworpen', weight: -5_000 },
   { key: 'injuries', label: 'Blessures', weight: -30_000 },
+  { key: 'clean_sheets', label: 'Propere lakens', weight: 100_000 },
 ] as const satisfies {
   key: keyof StatsRow
   label: string
@@ -50,6 +51,7 @@ const EVENT_STATS: Record<EventType, keyof StatsRow> = {
   yellow_card: 'yellow_cards',
   red_card: 'red_cards',
   injury: 'injuries',
+  clean_sheet: 'clean_sheets',
 }
 
 export type MarketValuePoint = {
@@ -92,16 +94,17 @@ export function marketValueHistory(
   }
 
   const points: MarketValuePoint[] = []
+  const currentValue = marketValue(stats).total
   let eventTotal = 0
   for (let game = 0; game <= seasonGames; game++) {
     eventTotal += eventAmountByGame.get(game) ?? 0
     points.push({
       game,
       label: game === 0 ? 'Start' : `W${game}`,
-      value: Math.max(
-        BASE_VALUE + spreadPerGame * game + eventTotal,
-        MIN_VALUE,
-      ),
+      value:
+        game === seasonGames
+          ? currentValue
+          : Math.max(BASE_VALUE + spreadPerGame * game + eventTotal, MIN_VALUE),
     })
   }
 

@@ -1,5 +1,6 @@
 import { Table } from '@mantine/core'
 import { useNavigate } from '@tanstack/react-router'
+import { useState } from 'react'
 import type { PlayerStatsRow } from './statsQuery'
 import classes from './statsTable.module.css'
 
@@ -9,7 +10,33 @@ type StatsTableProps = {
 
 export function StatsTable({ rows }: StatsTableProps) {
   const navigate = useNavigate()
+  const [sort, setSort] = useState<{
+    key: StatsColumn['key']
+    direction: 'descending' | 'ascending'
+  } | null>(null)
   const headers = rows.length > 0 ? mapColumns(rows[0]) : []
+  const sortedRows = sort
+    ? [...rows].sort((left, right) => {
+        const leftValue = getSortValue(left, sort.key)
+        const rightValue = getSortValue(right, sort.key)
+        const comparison =
+          typeof leftValue === 'number' && typeof rightValue === 'number'
+            ? leftValue - rightValue
+            : String(leftValue).localeCompare(String(rightValue), 'nl')
+
+        return sort.direction === 'descending' ? -comparison : comparison
+      })
+    : rows
+
+  function toggleSort(key: StatsColumn['key']) {
+    setSort((current) => {
+      if (current?.key !== key) return { key, direction: 'descending' }
+      if (current.direction === 'descending') {
+        return { key, direction: 'ascending' }
+      }
+      return null
+    })
+  }
 
   return (
     <Table.ScrollContainer minWidth={600}>
@@ -17,12 +44,30 @@ export function StatsTable({ rows }: StatsTableProps) {
         <Table.Thead>
           <Table.Tr>
             {headers.map((column) => (
-              <Table.Th key={column.key}>{column.label}</Table.Th>
+              <Table.Th
+                key={column.key}
+                aria-sort={sort?.key === column.key ? sort.direction : 'none'}
+              >
+                <button
+                  type="button"
+                  className={classes.sortButton}
+                  onClick={() => toggleSort(column.key)}
+                >
+                  {column.label}
+                  <span aria-hidden="true">
+                    {sort?.key === column.key
+                      ? sort.direction === 'descending'
+                        ? ' ↓'
+                        : ' ↑'
+                      : ' ↕'}
+                  </span>
+                </button>
+              </Table.Th>
             ))}
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
-          {rows.map((row) => (
+          {sortedRows.map((row) => (
             <Table.Tr
               key={row.id}
               className={classes.row}
@@ -45,9 +90,16 @@ export function StatsTable({ rows }: StatsTableProps) {
 }
 
 type StatsColumn = {
-  key: string
+  key: keyof PlayerStatsRow | 'name'
   label: string
   value: string | number
+}
+
+function getSortValue(
+  row: PlayerStatsRow,
+  key: StatsColumn['key'],
+): string | number {
+  return key === 'name' ? `${row.first_name} ${row.last_name}` : row[key]
 }
 
 function mapColumns(row: PlayerStatsRow): StatsColumn[] {
@@ -61,9 +113,10 @@ function mapColumns(row: PlayerStatsRow): StatsColumn[] {
     { key: 'red_cards', label: 'Rode kaarten', value: row.red_cards },
     {
       key: 'throwins_failed',
-      label: 'Mislukte ingooien',
+      label: 'Mislukte inworpen',
       value: row.throwins_failed,
     },
     { key: 'injuries', label: 'Blessures', value: row.injuries },
+    { key: 'clean_sheets', label: 'Clean sheets', value: row.clean_sheets },
   ]
 }

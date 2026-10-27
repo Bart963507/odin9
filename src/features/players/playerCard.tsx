@@ -7,7 +7,20 @@ type PlayerCardProps = {
   player: PlayerRow
 }
 
+const DEFAULT_SHIRT_COLOR = '#da0b00'
+const SHIRT_NUMBER_ONE_COLOR = '#3491bd'
+
+type PlayerCardColumn = {
+  key: 'role' | 'position'
+  label: string
+  value: string
+}
+
 export function PlayerCard({ player }: PlayerCardProps) {
+  const columns = mapColumns(player)
+  const shirtColor =
+    player.number === '1' ? SHIRT_NUMBER_ONE_COLOR : DEFAULT_SHIRT_COLOR
+
   return (
     <Card
       withBorder
@@ -36,8 +49,37 @@ export function PlayerCard({ player }: PlayerCardProps) {
       <Text fw={700} tt="uppercase">
         {player.last_name}
       </Text>
+      <div className={classes.details}>
+        {columns.map((column) => (
+          <div key={column.key} className={classes.metadata}>
+            <Text size="xs" c="dimmed">
+              {column.label}
+            </Text>
+            <Text size="sm" fw={600} className={classes.metaValue}>
+              {column.value || '—'}
+            </Text>
+          </div>
+        ))}
+        {player.number !== null && (
+          <span
+            className={classes.shirtNumber}
+            role="img"
+            aria-label={`Shirt number ${player.number}`}
+            style={{ backgroundColor: shirtColor }}
+          >
+            <span aria-hidden="true">{player.number}</span>
+          </span>
+        )}
+      </div>
     </Card>
   )
+}
+
+function mapColumns(row: PlayerRow): PlayerCardColumn[] {
+  return [
+    { key: 'role', label: 'Rol', value: row.role },
+    { key: 'position', label: 'Positie', value: row.position },
+  ]
 }
 
 export function playerPhotoUrl(player: PlayerRow): string {

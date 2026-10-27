@@ -6,6 +6,9 @@ export type PlayerRow = {
   id: number
   first_name: string
   last_name: string
+  role: string
+  position: string
+  number: string | null
 }
 
 export const playersQueryOptions = queryOptions({
@@ -34,5 +37,13 @@ function parsePlayersCsv(csv: string): PlayerRow[] {
     skipEmptyLines: 'greedy',
     transformHeader: (header) => header.trim(),
     transform: (value) => value.trim(),
-  }).data.map((row) => ({ ...row, id: Number(row.id) }))
+  }).data.map((row) => {
+    const shirtNumberValue = String(row.number ?? '').trim()
+
+    return {
+      ...row,
+      id: Number(row.id),
+      number: shirtNumberValue || null,
+    }
+  })
 }

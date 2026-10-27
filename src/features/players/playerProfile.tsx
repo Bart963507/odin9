@@ -59,6 +59,7 @@ function profileRows(stats: StatsRow): ProfileRow[] {
       label: 'Doelpunten per wedstrijd',
       value: perGame(stats.goals, stats.games_played),
     },
+    { key: 'clean_sheets', label: 'Propere lakens', value: stats.clean_sheets },
   ]
 }
 

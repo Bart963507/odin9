@@ -15,6 +15,7 @@ export type StatsRow = {
   games_played: number
   assists: number
   injuries: number
+  clean_sheets: number
 }
 
 export interface PlayerStatsRow extends StatsRow {
