@@ -121,5 +121,6 @@ function mapColumns(row: PlayerStatsRow): StatsColumn[] {
       value: row.throwins_failed,
     },
     { key: 'injuries', label: 'Blessures', value: row.injuries },
+    { key: 'clean_sheets', label: 'Clean sheets', value: row.clean_sheets },
   ]
 }
