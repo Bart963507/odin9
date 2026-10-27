@@ -48,12 +48,7 @@ function Players() {
         <Title mb={0}>Spelers</Title>
         <Group align="center" gap="md" justify="flex-end" wrap="wrap">
           <Group align="center" gap="xs" wrap="nowrap">
-            <Text
-              component="label"
-              htmlFor="player-search"
-              size="sm"
-              fw={500}
-            >
+            <Text component="label" htmlFor="player-search" size="sm" fw={500}>
               Zoek speler
             </Text>
             <TextInput

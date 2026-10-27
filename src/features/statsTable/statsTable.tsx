@@ -46,11 +46,7 @@ export function StatsTable({ rows }: StatsTableProps) {
             {headers.map((column) => (
               <Table.Th
                 key={column.key}
-                aria-sort={
-                  sort?.key === column.key
-                    ? sort.direction
-                    : 'none'
-                }
+                aria-sort={sort?.key === column.key ? sort.direction : 'none'}
               >
                 <button
                   type="button"

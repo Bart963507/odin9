@@ -54,8 +54,8 @@ export function MarketValueSection({
             {currentIsHighest
               ? 'Actueel'
               : highest.game === 0
-              ? 'Seizoensstart'
-              : `Na wedstrijd ${highest.game}`}
+                ? 'Seizoensstart'
+                : `Na wedstrijd ${highest.game}`}
           </Text>
         </div>
       </Group>

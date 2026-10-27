@@ -3,7 +3,13 @@ import { apiConfig } from '#/config/apiConfig'
 import { fetchCsv } from '#/lib/fetchCsv'
 
 export type EventType =
-  'goal' | 'assist' | 'own_goal' | 'yellow_card' | 'red_card' | 'injury' | 'clean_sheet'
+  | 'goal'
+  | 'assist'
+  | 'own_goal'
+  | 'yellow_card'
+  | 'red_card'
+  | 'injury'
+  | 'clean_sheet'
 
 export type EventRow = {
   game: number
