@@ -31,7 +31,7 @@ export function MarketValueSection({
   const highest = history.reduce((max, point) =>
     point.value > max.value ? point : max,
   )
-  const currentIsHighest = value.total > highest.value
+ const currentIsHighest = value.total > highest.value || value.total === highest.value;
   const highestValue = Math.max(value.total, highest.value)
 
   return (

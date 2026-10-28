@@ -3,6 +3,7 @@ import { apiConfig } from '#/config/apiConfig'
 import { fetchCsv } from '#/lib/fetchCsv'
 
 export type EventType =
+  | 'game_played'
   | 'goal'
   | 'assist'
   | 'own_goal'
