@@ -1,7 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Alert, Loader, Stack, Text, Title } from '@mantine/core'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { PlayerRole, playersQueryOptions } from '#/features/players/playersQuery'
+import {
+  PlayerRole,
+  playersQueryOptions,
+} from '#/features/players/playersQuery'
 import { PlayerRoleSection } from '#/features/players/components/playerRoleSection/playerRoleSection'
 
 export const Route = createFileRoute('/players/')({
@@ -31,11 +34,7 @@ function Players() {
             )
 
             return rolePlayers.length > 0 ? (
-              <PlayerRoleSection
-                key={role}
-                role={role}
-                players={rolePlayers}
-              />
+              <PlayerRoleSection key={role} role={role} players={rolePlayers} />
             ) : null
           })}
         </Stack>
