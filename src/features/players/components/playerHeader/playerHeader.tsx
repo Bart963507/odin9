@@ -13,8 +13,8 @@ type PlayerHeaderColumn = {
   value: string
 }
 
-const DEFAULT_SHIRT_COLOR = '#da0b00'
-const SHIRT_NUMBER_ONE_COLOR = '#3491bd'
+const DEFAULT_SHIRT_COLOR = 'var(--mantine-primary-color-filled)'
+const SHIRT_NUMBER_ONE_COLOR = 'var(--mantine-color-blue-5)'
 
 export function PlayerHeader({ player }: PlayerHeaderProps) {
   const columns = mapColumns(player)

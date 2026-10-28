@@ -1,8 +1,10 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { AppShell, Burger, Group, MantineProvider, Title } from '@mantine/core'
+import { AppShell, Container, MantineProvider } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NavLinks } from '#/components/navLinks'
+import { AppHeader } from '#/components/appHeader/appHeader'
+import { theme } from '#/theme'
 
 import '@mantine/core/styles.css'
 import '@mantine/charts/styles.css'
@@ -16,7 +18,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
-      <MantineProvider>
+      <MantineProvider theme={theme}>
         <Layout />
       </MantineProvider>
     </QueryClientProvider>
@@ -28,7 +30,7 @@ function Layout() {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 68 }}
       navbar={{
         width: 250,
         breakpoint: 'sm',
@@ -37,21 +39,17 @@ function Layout() {
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-          <Title order={3}>Odin 9</Title>
-          <Group gap="xs" visibleFrom="sm">
-            <NavLinks variant="header" />
-          </Group>
-        </Group>
+        <AppHeader navOpened={opened} onToggleNav={toggle} />
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
         <NavLinks variant="navbar" onNavigate={close} />
       </AppShell.Navbar>
 
-      <AppShell.Main>
-        <Outlet />
+      <AppShell.Main bg="gray.0">
+        <Container size="xl" px={0} py="md">
+          <Outlet />
+        </Container>
       </AppShell.Main>
     </AppShell>
   )

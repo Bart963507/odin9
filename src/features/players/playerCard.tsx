@@ -1,5 +1,6 @@
 import { Card, Image, Text } from '@mantine/core'
 import { Link } from '@tanstack/react-router'
+import { PlayerRole } from './playersQuery'
 import type { PlayerRow } from './playersQuery'
 import classes from './playerCard.module.css'
 
@@ -7,8 +8,8 @@ type PlayerCardProps = {
   player: PlayerRow
 }
 
-const DEFAULT_SHIRT_COLOR = '#da0b00'
-const SHIRT_NUMBER_ONE_COLOR = '#3491bd'
+const DEFAULT_SHIRT_COLOR = 'var(--mantine-primary-color-filled)'
+const SHIRT_NUMBER_ONE_COLOR = 'var(--mantine-color-blue-5)'
 
 type PlayerCardColumn = {
   key: 'role' | 'position'
@@ -19,7 +20,9 @@ type PlayerCardColumn = {
 export function PlayerCard({ player }: PlayerCardProps) {
   const columns = mapColumns(player)
   const shirtColor =
-    player.number === '1' ? SHIRT_NUMBER_ONE_COLOR : DEFAULT_SHIRT_COLOR
+    player.position === PlayerRole.Goalkeeper
+      ? SHIRT_NUMBER_ONE_COLOR
+      : DEFAULT_SHIRT_COLOR
 
   return (
     <Card

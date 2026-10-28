@@ -15,7 +15,7 @@ export function NavLinks({ variant, onNavigate }: NavLinksProps) {
     return (
       <>
         <Button
-          variant={statsActive ? 'light' : 'subtle'}
+          variant={statsActive ? 'filled' : 'subtle'}
           renderRoot={(props) => (
             <Link {...props} to="/" onClick={onNavigate} />
           )}
@@ -23,7 +23,7 @@ export function NavLinks({ variant, onNavigate }: NavLinksProps) {
           Statistieken
         </Button>
         <Button
-          variant={playersActive ? 'light' : 'subtle'}
+          variant={playersActive ? 'filled' : 'subtle'}
           renderRoot={(props) => (
             <Link {...props} to="/players" onClick={onNavigate} />
           )}
