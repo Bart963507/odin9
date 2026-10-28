@@ -63,7 +63,7 @@ export function MarketValueSection({
         h={240}
         data={history}
         dataKey="label"
-        series={[{ name: 'value', label: 'Marktwaarde', color: 'blue.7' }]}
+        series={[{ name: 'value', label: 'Marktwaarde', color: 'navy.7' }]}
         curveType="linear"
         gridAxis="y"
         strokeWidth={2}

@@ -44,29 +44,3 @@
   white-space: nowrap;
 }
 
-.shirtNumber {
-  display: grid;
-  width: 55px;
-  height: 42px;
-  place-items: center;
-  padding-top: 6px;
-  background: var(--mantine-color-red-7);
-  color: var(--mantine-color-white);
-  font-size: var(--mantine-font-size-sm);
-  font-weight: 800;
-  line-height: 1;
-  clip-path: polygon(
-    27% 0,
-    39% 10%,
-    61% 10%,
-    73% 0,
-    100% 20%,
-    84% 40%,
-    73% 33%,
-    73% 100%,
-    27% 100%,
-    27% 33%,
-    16% 40%,
-    0 20%
-  );
-}
