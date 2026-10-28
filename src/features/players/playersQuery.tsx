@@ -2,11 +2,18 @@ import Papa from 'papaparse'
 import { queryOptions } from '@tanstack/react-query'
 import { apiConfig } from '#/config/apiConfig'
 
+export enum PlayerRole {
+  Goalkeeper = 'Doelman',
+  Defender = 'Verdediger',
+  Midfielder = 'Middenvelder',
+  Forward = 'Aanvaller',
+}
+
 export type PlayerRow = {
   id: number
   first_name: string
   last_name: string
-  role: string
+  role: PlayerRole
   position: string
   number: string | null
 }

@@ -3,15 +3,15 @@ import {
   Alert,
   Group,
   Loader,
-  SimpleGrid,
+  Stack,
   Text,
   TextInput,
   Title,
 } from '@mantine/core'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { useState } from 'react'
-import { playersQueryOptions } from '#/features/players/playersQuery'
-import { PlayerCard } from '#/features/players/playerCard'
+import { PlayerRole, playersQueryOptions } from '#/features/players/playersQuery'
+import { PlayerRoleSection } from '#/features/players/components/playerRoleSection/playerRoleSection'
 
 export const Route = createFileRoute('/players/')({
   component: Players,
@@ -63,11 +63,21 @@ function Players() {
         </Group>
       </Group>
       {filteredPlayers.length > 0 ? (
-        <SimpleGrid cols={{ base: 1, xs: 2, sm: 3, lg: 4 }}>
-          {filteredPlayers.map((player) => (
-            <PlayerCard key={player.id} player={player} />
-          ))}
-        </SimpleGrid>
+        <Stack gap="xl">
+          {Object.values(PlayerRole).map((role) => {
+            const rolePlayers = filteredPlayers.filter(
+              (player) => player.role === role,
+            )
+
+            return rolePlayers.length > 0 ? (
+              <PlayerRoleSection
+                key={role}
+                role={role}
+                players={rolePlayers}
+              />
+            ) : null
+          })}
+        </Stack>
       ) : (
         <Text c="dimmed" role="status">
           Geen spelers gevonden.
