@@ -40,8 +40,14 @@ export function StatsTable({ rows }: StatsTableProps) {
 
   return (
     <Table.ScrollContainer minWidth={600}>
-      <Table striped highlightOnHover withTableBorder stickyHeader>
-        <Table.Thead>
+      <Table
+        striped
+        highlightOnHover
+        withTableBorder
+        stickyHeader
+        className={classes.table}
+      >
+        <Table.Thead className={classes.head}>
           <Table.Tr>
             {headers.map((column) => (
               <Table.Th
@@ -54,12 +60,12 @@ export function StatsTable({ rows }: StatsTableProps) {
                   onClick={() => toggleSort(column.key)}
                 >
                   {column.label}
-                  <span aria-hidden="true">
+                  <span aria-hidden="true" className={classes.sortIcon}>
                     {sort?.key === column.key
                       ? sort.direction === 'descending'
-                        ? ' ↓'
-                        : ' ↑'
-                      : ' ↕'}
+                        ? '↓'
+                        : '↑'
+                      : '↕︎'}
                   </span>
                 </button>
               </Table.Th>
@@ -117,6 +123,6 @@ function mapColumns(row: PlayerStatsRow): StatsColumn[] {
       value: row.throwins_failed,
     },
     { key: 'injuries', label: 'Blessures', value: row.injuries },
-    { key: 'clean_sheets', label: 'Clean sheets', value: row.clean_sheets },
+    { key: 'clean_sheets', label: 'Propere lakens', value: row.clean_sheets },
   ]
 }

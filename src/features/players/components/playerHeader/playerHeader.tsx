@@ -1,6 +1,7 @@
 import { Image, Text } from '@mantine/core'
 import type { PlayerRow } from '../../playersQuery'
 import { playerPhotoUrl } from '../../playerCard'
+import { ShirtNumber } from '../shirtNumber/shirtNumber'
 import classes from './playerHeader.module.css'
 
 type PlayerHeaderProps = {
@@ -13,13 +14,8 @@ type PlayerHeaderColumn = {
   value: string
 }
 
-const DEFAULT_SHIRT_COLOR = '#da0b00'
-const SHIRT_NUMBER_ONE_COLOR = '#3491bd'
-
 export function PlayerHeader({ player }: PlayerHeaderProps) {
   const columns = mapColumns(player)
-  const shirtColor =
-    player.number === '1' ? SHIRT_NUMBER_ONE_COLOR : DEFAULT_SHIRT_COLOR
 
   return (
     <div className={classes.banner}>
@@ -47,14 +43,7 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
             </div>
           ))}
           {player.number !== null && (
-            <span
-              className={classes.shirtNumber}
-              role="img"
-              aria-label={`Shirt number ${player.number}`}
-              style={{ backgroundColor: shirtColor }}
-            >
-              <span aria-hidden="true">{player.number}</span>
-            </span>
+            <ShirtNumber number={player.number} role={player.role} inverted />
           )}
         </div>
       </div>
