@@ -45,6 +45,7 @@ export function marketValue(stats: StatsRow): MarketValue {
 
 // Stats that are also recorded per game in the events sheet.
 const EVENT_STATS: Record<EventType, keyof StatsRow> = {
+  game_played: 'games_played',
   goal: 'goals',
   assist: 'assists',
   own_goal: 'own_goals',
@@ -62,7 +63,7 @@ export type MarketValuePoint = {
 
 /**
  * Market value after every game. Event-based stats land on the game they
- * happened in; stats without events (games played, throw-ins)
+ * happened in; stats without events (throw-ins)
  * have no game, so they are spread evenly over the season.
  */
 export function marketValueHistory(

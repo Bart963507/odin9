@@ -79,3 +79,47 @@
   height: 100%;
   object-position: bottom right;
 }
+
+@media (max-width: 48em) {
+  .bannerText {
+    right: auto;
+    top: 50%;
+    bottom: auto;
+    width: calc(50% - var(--mantine-spacing-xl));
+    transform: translateY(-50%);
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: var(--mantine-spacing-xs);
+  }
+
+  .name {
+    width: 100%;
+  }
+
+  .details {
+    display: grid;
+    width: 100%;
+    grid-template-columns: max-content 55px;
+    align-items: start;
+  }
+
+  .metadata:first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .metadata:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .shirtNumber {
+    grid-column: 2;
+    grid-row: 2 / 3;
+    /* Resize the shirt if needed
+    height: auto;
+    width: auto;
+    align-self: stretch;
+    padding-top: 0; */
+  }
+}
