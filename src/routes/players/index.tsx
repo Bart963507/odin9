@@ -1,6 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Alert, Loader, Stack, Text, Title } from '@mantine/core'
+import {
+  Alert,
+  Group,
+  Loader,
+  Stack,
+  Text,
+  TextInput,
+  Title,
+} from '@mantine/core'
 import { useSuspenseQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import {
   PlayerRole,
   playersQueryOptions,
@@ -19,17 +28,38 @@ export const Route = createFileRoute('/players/')({
 
 function Players() {
   const { data: players } = useSuspenseQuery(playersQueryOptions)
+  const [search, setSearch] = useState('')
   const sortedPlayers = [...players].sort((a, b) =>
     a.last_name.localeCompare(b.last_name),
+  )
+  const normalizedSearch = search.trim().toLowerCase()
+  const filteredPlayers = sortedPlayers.filter(
+    (player) =>
+      player.first_name.toLowerCase().includes(normalizedSearch) ||
+      player.last_name.toLowerCase().includes(normalizedSearch),
   )
 
   return (
     <Stack gap="md">
-      <Title order={1}>Spelers</Title>
-      {sortedPlayers.length > 0 ? (
+      <Stack gap="xs">
+        <Title order={1}>Spelers</Title>
+        <Group align="center" gap="xs" wrap="nowrap">
+          <Text component="label" htmlFor="player-search" size="sm" fw={500}>
+            Zoek speler
+          </Text>
+          <TextInput
+            id="player-search"
+            placeholder="Voor- of achternaam"
+            value={search}
+            onChange={(event) => setSearch(event.currentTarget.value)}
+            w={{ base: 200, sm: 260 }}
+          />
+        </Group>
+      </Stack>
+      {filteredPlayers.length > 0 ? (
         <Stack gap="xl">
           {Object.values(PlayerRole).map((role) => {
-            const rolePlayers = sortedPlayers.filter(
+            const rolePlayers = filteredPlayers.filter(
               (player) => player.role === role,
             )
 
