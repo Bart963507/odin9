@@ -27,6 +27,12 @@ const RESULT_COLORS = {
   loss: 'red.6',
 } as const
 
+const RESULT_ABBREVIATIONS = {
+  win: 'W',
+  draw: 'G',
+  loss: 'V',
+} as const
+
 export function TeamStatisticsDashboard({
   games,
   players,
@@ -56,6 +62,15 @@ export function TeamStatisticsDashboard({
       value: average(statistics.goalsAgainst),
     },
   ]
+  const formSlots = Array.from(
+    { length: 5 },
+    (_, index) =>
+      statistics.recentForm.at(index - (5 - statistics.recentForm.length)) ??
+      null,
+  )
+  const formSummary = formSlots
+    .map((game) => (game ? RESULT_ABBREVIATIONS[game.result] : '-'))
+    .join('/')
 
   return (
     <Stack gap="lg">
@@ -123,40 +138,29 @@ export function TeamStatisticsDashboard({
               <Title order={2} size="h3">
                 Huidige vorm
               </Title>
-              <Text size="sm" c="dimmed">
-                Laatste vijf wedstrijden
-              </Text>
             </Group>
-            <Group gap="sm" className={classes.form} aria-label="Recente vorm">
-              {Array.from({ length: 5 }, (_, index) => {
-                const game =
-                  statistics.recentForm.at(
-                    index - (5 - statistics.recentForm.length),
-                  ) ?? null
-
-                return (
-                  <span
-                    key={game?.id ?? `empty-${index}`}
-                    className={`${classes.formBall} ${game ? classes[game.result] : classes.unplayed}`}
-                    role="img"
-                    aria-label={
-                      game
-                        ? `${RESULT_LABELS[game.result]} ${game.goalsFor}-${game.goalsAgainst}`
-                        : 'Nog geen wedstrijd'
-                    }
-                    title={
-                      game
-                        ? `${RESULT_LABELS[game.result]} ${game.goalsFor}-${game.goalsAgainst}`
-                        : 'Nog geen wedstrijd'
-                    }
-                  />
-                )
-              })}
-            </Group>
-            <Text size="sm" c="dimmed">
-              {statistics.wins} gewonnen, {statistics.draws} gelijk en{' '}
-              {statistics.losses} verloren uit {played} gespeelde wedstrijden.
+            <Text  c="dimmed">
+            {formSummary}
             </Text>
+            <Group gap="sm" className={classes.form} aria-label="Recente vorm">
+              {formSlots.map((game, index) => (
+                <span
+                  key={game?.id ?? `empty-${index}`}
+                  className={`${classes.formBall} ${game ? classes[game.result] : classes.unplayed}`}
+                  role="img"
+                  aria-label={
+                    game
+                      ? `${RESULT_LABELS[game.result]} ${game.goalsFor}-${game.goalsAgainst}`
+                      : 'Nog geen wedstrijd'
+                  }
+                  title={
+                    game
+                      ? `${RESULT_LABELS[game.result]} ${game.goalsFor}-${game.goalsAgainst}`
+                      : 'Nog geen wedstrijd'
+                  }
+                />
+              ))}
+            </Group>
             <SimpleGrid cols={{ base: 1, sm: 3 }}>
               {averages.map((stat) => (
                 <Stack key={stat.label} gap={2}>
@@ -185,25 +189,19 @@ export function TeamStatisticsDashboard({
             return (
               <Card key={stat.key} p="md" className={classes.leaderCard}>
                 <Text size="sm" c="dimmed">
-                  Meeste {stat.label.toLowerCase()}
+                  Meeste {stat.label.toLowerCase()}: {leaderValue}{' '}
                 </Text>
                 {leaderValue > 0 ? (
-                  <Text fw={700} className={classes.leaderNames}>
+                  <Text size="xl" fw={700} className={classes.leaderNames}>
                     {leaders
                       .map(
                         (player) => `${player.first_name} ${player.last_name}`,
                       )
-                      .join(', ')}
+                      .join('\n')}
                   </Text>
                 ) : (
                   <Text c="dimmed">Nog geen registraties</Text>
                 )}
-                <Text size="sm" c="dimmed">
-                  {leaderValue}{' '}
-                  {leaderValue === 1
-                    ? stat.singularLabel
-                    : stat.label.toLowerCase()}
-                </Text>
               </Card>
             )
           })}

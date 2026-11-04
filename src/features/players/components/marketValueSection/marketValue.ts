@@ -53,6 +53,7 @@ const EVENT_STATS: Record<EventType, keyof StatsRow> = {
   red_card: 'red_cards',
   injury: 'injuries',
   clean_sheet: 'clean_sheets',
+  throwin_failed: 'throwins_failed',
 }
 
 export type MarketValuePoint = {

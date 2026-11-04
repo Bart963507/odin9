@@ -77,26 +77,26 @@ export function calculateTeamStatistics(games: PlayedGame[]): TeamStatistics {
 }
 
 export const playerLeaderStats = [
-  { key: 'games_played', label: 'Wedstrijden', singularLabel: 'wedstrijd' },
-  { key: 'goals', label: 'Doelpunten', singularLabel: 'doelpunt' },
-  { key: 'assists', label: 'Assists', singularLabel: 'assist' },
+  { key: 'games_played', label: 'Wedstrijden', singularLabel: 'Wedstrijd' },
+  { key: 'goals', label: 'Doelpunten', singularLabel: 'Doelpunt' },
+  { key: 'assists', label: 'Assists', singularLabel: 'Assist' },
   {
     key: 'own_goals',
     label: 'Eigen doelpunten',
-    singularLabel: 'eigen doelpunt',
+    singularLabel: 'Eigen doelpunt',
   },
-  { key: 'yellow_cards', label: 'Gele kaarten', singularLabel: 'gele kaart' },
-  { key: 'red_cards', label: 'Rode kaarten', singularLabel: 'rode kaart' },
+  { key: 'yellow_cards', label: 'Gele kaarten', singularLabel: 'Gele kaart' },
+  { key: 'red_cards', label: 'Rode kaarten', singularLabel: 'Rode kaart' },
   {
     key: 'throwins_failed',
     label: 'Mislukte inworpen',
-    singularLabel: 'mislukte inworp',
+    singularLabel: 'Mislukte inworp',
   },
-  { key: 'injuries', label: 'Blessures', singularLabel: 'blessure' },
+  { key: 'injuries', label: 'Blessures', singularLabel: 'Blessure' },
   {
     key: 'clean_sheets',
     label: 'Propere lakens',
-    singularLabel: 'proper laken',
+    singularLabel: 'Proper laken',
   },
 ] as const satisfies readonly {
   key: keyof PlayerStatsRow
