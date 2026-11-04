@@ -1,0 +1,34 @@
+.form {
+  min-height: 36px;
+}
+
+.formBall {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--mantine-color-gray-4);
+}
+
+.win {
+  background-color: var(--mantine-color-green-6);
+}
+
+.draw,
+.unplayed {
+  background-color: var(--mantine-color-gray-5);
+}
+
+.loss {
+  background-color: var(--mantine-color-red-6);
+}
+
+.leaderCard {
+  min-height: 124px;
+}
+
+.leaderNames {
+  overflow-wrap: anywhere;
+}

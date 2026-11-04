@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CoenDillenIndexRouteImport } from './routes/coen-dillen-index'
+import { Route as TeamStatisticsRouteImport } from './routes/team-statistics'
 import { Route as PlayersIndexRouteImport } from './routes/players/index'
 import { Route as PlayersPlayerIdRouteImport } from './routes/players/$playerId'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const CoenDillenIndexRoute = CoenDillenIndexRouteImport.update({
   id: '/coen-dillen-index',
   path: '/coen-dillen-index',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamStatisticsRoute = TeamStatisticsRouteImport.update({
+  id: '/team-statistics',
+  path: '/team-statistics',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlayersIndexRoute = PlayersIndexRouteImport.update({
@@ -38,12 +44,14 @@ const PlayersPlayerIdRoute = PlayersPlayerIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/coen-dillen-index': typeof CoenDillenIndexRoute
+  '/team-statistics': typeof TeamStatisticsRoute
   '/players/$playerId': typeof PlayersPlayerIdRoute
   '/players/': typeof PlayersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/coen-dillen-index': typeof CoenDillenIndexRoute
+  '/team-statistics': typeof TeamStatisticsRoute
   '/players/$playerId': typeof PlayersPlayerIdRoute
   '/players': typeof PlayersIndexRoute
 }
@@ -51,21 +59,38 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/coen-dillen-index': typeof CoenDillenIndexRoute
+  '/team-statistics': typeof TeamStatisticsRoute
   '/players/$playerId': typeof PlayersPlayerIdRoute
   '/players/': typeof PlayersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/coen-dillen-index' | '/players/$playerId' | '/players/'
+  fullPaths:
+    | '/'
+    | '/coen-dillen-index'
+    | '/team-statistics'
+    | '/players/$playerId'
+    | '/players/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/coen-dillen-index' | '/players/$playerId' | '/players'
+  to:
+    | '/'
+    | '/coen-dillen-index'
+    | '/team-statistics'
+    | '/players/$playerId'
+    | '/players'
   id:
-    '__root__' | '/' | '/coen-dillen-index' | '/players/$playerId' | '/players/'
+    | '__root__'
+    | '/'
+    | '/coen-dillen-index'
+    | '/team-statistics'
+    | '/players/$playerId'
+    | '/players/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CoenDillenIndexRoute: typeof CoenDillenIndexRoute
+  TeamStatisticsRoute: typeof TeamStatisticsRoute
   PlayersPlayerIdRoute: typeof PlayersPlayerIdRoute
   PlayersIndexRoute: typeof PlayersIndexRoute
 }
@@ -84,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/coen-dillen-index'
       fullPath: '/coen-dillen-index'
       preLoaderRoute: typeof CoenDillenIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team-statistics': {
+      id: '/team-statistics'
+      path: '/team-statistics'
+      fullPath: '/team-statistics'
+      preLoaderRoute: typeof TeamStatisticsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/players/': {
@@ -106,6 +138,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CoenDillenIndexRoute: CoenDillenIndexRoute,
+  TeamStatisticsRoute: TeamStatisticsRoute,
   PlayersPlayerIdRoute: PlayersPlayerIdRoute,
   PlayersIndexRoute: PlayersIndexRoute,
 }

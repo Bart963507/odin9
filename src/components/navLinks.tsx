@@ -10,6 +10,7 @@ export function NavLinks({ variant, onNavigate }: NavLinksProps) {
   const matchRoute = useMatchRoute()
   const statsActive = Boolean(matchRoute({ to: '/' }))
   const playersActive = Boolean(matchRoute({ to: '/players', fuzzy: true }))
+  const teamStatsActive = Boolean(matchRoute({ to: '/team-statistics' }))
   const coenDillenActive = Boolean(matchRoute({ to: '/coen-dillen-index' }))
 
   if (variant === 'header') {
@@ -30,6 +31,14 @@ export function NavLinks({ variant, onNavigate }: NavLinksProps) {
           )}
         >
           Spelers
+        </Button>
+        <Button
+          variant={teamStatsActive ? 'filled' : 'subtle'}
+          renderRoot={(props) => (
+            <Link {...props} to="/team-statistics" onClick={onNavigate} />
+          )}
+        >
+          Teamstatistieken
         </Button>
         <Button
           variant={coenDillenActive ? 'filled' : 'subtle'}
@@ -55,6 +64,13 @@ export function NavLinks({ variant, onNavigate }: NavLinksProps) {
         active={playersActive}
         renderRoot={(props) => (
           <Link {...props} to="/players" onClick={onNavigate} />
+        )}
+      />
+      <NavLink
+        label="Teamstatistieken"
+        active={teamStatsActive}
+        renderRoot={(props) => (
+          <Link {...props} to="/team-statistics" onClick={onNavigate} />
         )}
       />
       <NavLink
