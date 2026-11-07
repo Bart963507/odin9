@@ -1,0 +1,21 @@
+name: odin9
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: odin
+      POSTGRES_PASSWORD: odin
+      POSTGRES_DB: odin
+    ports:
+      - "5433:5432"
+    volumes:
+      - odin-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odin -d odin"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  odin-db:
