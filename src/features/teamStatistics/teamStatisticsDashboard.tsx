@@ -1,5 +1,6 @@
 import { DonutChart } from '@mantine/charts'
 import { Card, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core'
+import { Link } from '@tanstack/react-router'
 import type { PlayerStatsRow } from '#/features/statsTable/statsQuery'
 import {
   calculateTeamStatistics,
@@ -277,11 +278,16 @@ export function TeamStatisticsDashboard({
                 </Text>
                 {leaderValue > 0 ? (
                   <Text size="xl" fw={700} className={classes.leaderNames}>
-                    {leaders
-                      .map(
-                        (player) => `${player.first_name} ${player.last_name}`,
-                      )
-                      .join('\n')}
+                    {leaders.map((player) => (
+                      <Link
+                        key={player.id}
+                        to="/players/$playerId"
+                        params={{ playerId: String(player.player_id) }}
+                        className={classes.leaderLink}
+                      >
+                        {player.first_name} {player.last_name}
+                      </Link>
+                    ))}
                   </Text>
                 ) : (
                   <Text c="dimmed">Nog geen registraties</Text>
