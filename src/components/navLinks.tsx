@@ -38,7 +38,7 @@ export function NavLinks({ variant, onNavigate }: NavLinksProps) {
             <Link {...props} to="/team-statistics" onClick={onNavigate} />
           )}
         >
-          Teamstatistieken
+          Team
         </Button>
         <Button
           variant={coenDillenActive ? 'filled' : 'subtle'}
