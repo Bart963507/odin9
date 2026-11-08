@@ -1,6 +1,10 @@
 import { DonutChart } from '@mantine/charts'
 import { Card, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core'
 import { Link } from '@tanstack/react-router'
+import {
+  formatMarketValue,
+  marketValue,
+} from '#/features/players/components/marketValueSection/marketValue'
 import type { PlayerStatsRow } from '#/features/statsTable/statsQuery'
 import {
   calculateTeamStatistics,
@@ -43,6 +47,17 @@ export function TeamStatisticsDashboard({
   const failedThrowins = players.reduce(
     (total, player) => total + player.throwins_failed,
     0,
+  )
+  const playerMarketValues = players.map((player) => ({
+    player,
+    value: marketValue(player).total,
+  }))
+  const highestMarketValue = playerMarketValues.reduce(
+    (highest, entry) => Math.max(highest, entry.value),
+    0,
+  )
+  const marketValueLeaders = playerMarketValues.filter(
+    (entry) => entry.value === highestMarketValue,
   )
   const percentage = (count: number) =>
     played > 0
@@ -295,6 +310,27 @@ export function TeamStatisticsDashboard({
               </Card>
             )
           })}
+          <Card p="md" className={classes.leaderCard}>
+            <Text size="sm" c="dimmed">
+              Hoogste marktwaarde: {formatMarketValue(highestMarketValue)}
+            </Text>
+            {marketValueLeaders.length > 0 ? (
+              <Text size="xl" fw={700} className={classes.leaderNames}>
+                {marketValueLeaders.map(({ player }) => (
+                  <Link
+                    key={player.id}
+                    to="/players/$playerId"
+                    params={{ playerId: String(player.player_id) }}
+                    className={classes.leaderLink}
+                  >
+                    {player.first_name} {player.last_name}
+                  </Link>
+                ))}
+              </Text>
+            ) : (
+              <Text c="dimmed">Nog geen registraties</Text>
+            )}
+          </Card>
         </SimpleGrid>
       </Stack>
     </Stack>
