@@ -7,6 +7,8 @@ from limits import RateLimitItem, parse
 from limits.storage import MemoryStorage
 from limits.strategies import MovingWindowRateLimiter
 
+RAILWAY_CLIENT_IP_HEADER = "x-real-ip"
+
 rate_limiter = MovingWindowRateLimiter(MemoryStorage())
 
 
@@ -29,6 +31,8 @@ def rate_limit(limit: str, namespace: str) -> Callable[[Request], None]:
 
 
 def client_address_of(request: Request) -> str:
+    if railway_client_ip := request.headers.get(RAILWAY_CLIENT_IP_HEADER):
+        return railway_client_ip
     return request.client.host if request.client else "unknown"
 
 
