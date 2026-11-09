@@ -1,18 +1,21 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.config import get_settings
 from app.database import SessionDependency
+from app.rate_limit import rate_limit
+from app.routers import players
 
-app = FastAPI(title="Odin API")
+app = FastAPI(title="Odin API", dependencies=[Depends(rate_limit("120/minute", "api"))])
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=get_settings().cors_origins,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Authorization"],
+    allow_methods=["GET"],
 )
+
+app.include_router(players.router)
 
 
 @app.get("/health")

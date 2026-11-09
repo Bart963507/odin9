@@ -6,11 +6,9 @@ requires-python = ">=3.14"
 dependencies = [
     "alembic>=1.20.1",
     "fastapi>=0.162.1",
+    "limits>=5.8.0",
     "psycopg[binary]>=3.3.8",
-    "pwdlib[argon2]>=0.3.1",
     "pydantic-settings>=2.16.2",
-    "pyjwt>=2.15.1",
-    "slowapi>=0.1.10",
     "sqlalchemy>=2.1.8",
     "uvicorn[standard]>=0.54.0",
 ]
@@ -20,9 +18,7 @@ package = false
 
 [dependency-groups]
 dev = [
-    "httpx2>=2.16.0",
     "mypy>=2.4.1",
-    "pytest>=9.2.0",
     "ruff>=0.17.4",
 ]
 
@@ -34,18 +30,12 @@ line-length = 88
 select = ["E", "F", "I", "UP", "B", "SIM"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["app", "scripts", "tests"]
+known-first-party = ["app"]
 known-third-party = ["alembic"]
 
 [tool.mypy]
 python_version = "3.14"
 strict = true
 explicit_package_bases = true
+files = ["app"]
 plugins = ["pydantic.mypy"]
-
-[[tool.mypy.overrides]]
-module = ["slowapi.*"]
-ignore_missing_imports = true
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
