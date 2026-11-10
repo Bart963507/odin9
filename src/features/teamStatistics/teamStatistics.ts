@@ -48,7 +48,7 @@ export type TeamStatistics = {
 
 export function getPlayedGames(rows: GameRow[]): PlayedGame[] {
   return rows
-    .map((row) => {
+    .map((row): PlayedGame | null => {
       const goalsFor = Number(row.goals_odin)
       const goalsAgainst = Number(row.goals_opponent)
 
