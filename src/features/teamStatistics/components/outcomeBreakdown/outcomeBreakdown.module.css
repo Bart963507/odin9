@@ -1,0 +1,12 @@
+.outcomeChart {
+  position: relative;
+  width: 92px;
+  height: 92px;
+  flex: 0 0 92px;
+}
+
+.outcomeLabel {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}

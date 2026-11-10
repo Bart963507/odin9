@@ -1,7 +1,31 @@
+import type { MantineColor } from '@mantine/core'
 import type { PlayerStatsRow } from '#/features/statsTable/statsQuery'
 import type { GameRow } from './gamesQuery'
 
-export type GameResult = 'win' | 'draw' | 'loss'
+export type GameResultKey = 'win' | 'draw' | 'loss'
+
+export type GameResult = {
+  key: GameResultKey
+  label: string
+  abbreviation: string
+  color: MantineColor
+}
+
+export const gameResults = {
+  win: { key: 'win', label: 'Winst', abbreviation: 'W', color: 'green.6' },
+  draw: {
+    key: 'draw',
+    label: 'Gelijkspel',
+    abbreviation: 'G',
+    color: 'gray.5',
+  },
+  loss: { key: 'loss', label: 'Verlies', abbreviation: 'V', color: 'red.6' },
+} satisfies Record<GameResultKey, GameResult>
+
+export type GameResultStat = {
+  result: GameResult
+  count: number
+}
 
 export type PlayedGame = {
   id: number
@@ -46,10 +70,10 @@ export function getPlayedGames(rows: GameRow[]): PlayedGame[] {
         goalsAgainst,
         result:
           goalsFor > goalsAgainst
-            ? 'win'
+            ? gameResults.win
             : goalsFor === goalsAgainst
-              ? 'draw'
-              : 'loss',
+              ? gameResults.draw
+              : gameResults.loss,
       } satisfies PlayedGame
     })
     .filter((game): game is PlayedGame => game !== null)
@@ -60,9 +84,9 @@ export function getPlayedGames(rows: GameRow[]): PlayedGame[] {
 }
 
 export function calculateTeamStatistics(games: PlayedGame[]): TeamStatistics {
-  const wins = games.filter((game) => game.result === 'win').length
-  const draws = games.filter((game) => game.result === 'draw').length
-  const losses = games.filter((game) => game.result === 'loss').length
+  const wins = games.filter((game) => game.result.key === 'win').length
+  const draws = games.filter((game) => game.result.key === 'draw').length
+  const losses = games.filter((game) => game.result.key === 'loss').length
 
   return {
     gamesPlayed: games.length,
