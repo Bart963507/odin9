@@ -1,0 +1,13 @@
+.formBall {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--mantine-color-gray-4);
+  font-size: 10px;
+  font-weight: 400;
+}

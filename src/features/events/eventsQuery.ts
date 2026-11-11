@@ -11,6 +11,7 @@ export type EventType =
   | 'red_card'
   | 'injury'
   | 'clean_sheet'
+  | 'throwin_failed'
 
 export type EventRow = {
   game: number

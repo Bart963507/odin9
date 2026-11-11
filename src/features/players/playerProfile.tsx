@@ -70,7 +70,7 @@ function disciplineRows(stats: StatsRow): ProfileRow[] {
     { key: 'own_goals', label: 'Eigen doelpunten', value: stats.own_goals },
     {
       key: 'throwins_failed',
-      label: 'Mislukte ingooien',
+      label: 'Mislukte inworpen',
       value: stats.throwins_failed,
     },
     { key: 'injuries', label: 'Blessures', value: stats.injuries },

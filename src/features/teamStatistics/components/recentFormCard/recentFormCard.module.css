@@ -1,0 +1,7 @@
+.card {
+  flex: 1 1 auto;
+}
+
+.form {
+  min-height: 36px;
+}
