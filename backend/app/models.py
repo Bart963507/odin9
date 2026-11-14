@@ -32,6 +32,7 @@ class EventType(enum.Enum):
     RED_CARD = "red_card"
     THROWIN_FAILED = "throwin_failed"
     INJURY = "injury"
+    CLEAN_SHEET = "clean_sheet"
 
 
 class Player(Base):

@@ -87,6 +87,7 @@ def upgrade() -> None:
                 "red_card",
                 "throwin_failed",
                 "injury",
+                "clean_sheet",
                 name="event_type",
             ),
             nullable=False,
