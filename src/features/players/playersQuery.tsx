@@ -1,5 +1,5 @@
-import Papa from 'papaparse'
 import { queryOptions } from '@tanstack/react-query'
+import { z } from 'zod'
 import { apiConfig } from '#/config/apiConfig'
 
 export enum PlayerRole {
@@ -9,48 +9,56 @@ export enum PlayerRole {
   Forward = 'Aanvaller',
 }
 
-export type PlayerRow = {
+export type Player = {
   id: number
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   role: PlayerRole
   position: string
-  number: string | null
+  shirtNumber: number | null
 }
+
+const playerResponseSchema = z.object({
+  id: z.number(),
+  first_name: z.string(),
+  last_name: z.string(),
+  role: z.enum(PlayerRole),
+  position: z.string(),
+  number: z.number().nullable(),
+})
+
+type PlayerResponse = z.infer<typeof playerResponseSchema>
 
 export const playersQueryOptions = queryOptions({
   queryKey: ['players'],
   queryFn: ({ signal }) => fetchPlayers({ signal }),
 })
 
-async function fetchPlayers({ signal }: { signal?: AbortSignal } = {}): Promise<
-  PlayerRow[]
-> {
+async function fetchPlayers({
+  signal,
+}: {
+  signal: AbortSignal
+}): Promise<Player[]> {
   const response = await fetch(apiConfig.players, { signal })
 
   if (!response.ok) {
     throw new Error(
-      `Failed to fetch players CSV: ${response.status} ${response.statusText}`,
+      `Failed to fetch players: ${response.status} ${response.statusText}`,
     )
   }
 
-  const csv = await response.text()
-  return parsePlayersCsv(csv)
+  const players = z.array(playerResponseSchema).parse(await response.json())
+
+  return players.map(toPlayer)
 }
 
-function parsePlayersCsv(csv: string): PlayerRow[] {
-  return Papa.parse<PlayerRow>(csv, {
-    header: true,
-    skipEmptyLines: 'greedy',
-    transformHeader: (header) => header.trim(),
-    transform: (value) => value.trim(),
-  }).data.map((row) => {
-    const shirtNumberValue = String(row.number ?? '').trim()
-
-    return {
-      ...row,
-      id: Number(row.id),
-      number: shirtNumberValue || null,
-    }
-  })
+function toPlayer(response: PlayerResponse): Player {
+  return {
+    id: response.id,
+    firstName: response.first_name,
+    lastName: response.last_name,
+    role: response.role,
+    position: response.position,
+    shirtNumber: response.number,
+  }
 }

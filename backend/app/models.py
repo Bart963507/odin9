@@ -35,7 +35,7 @@ class EventType(enum.Enum):
     CLEAN_SHEET = "clean_sheet"
 
 
-class Player(Base):
+class DBPlayer(Base):
     __tablename__ = "players"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -45,11 +45,11 @@ class Player(Base):
     position: Mapped[str | None] = mapped_column(String(50))
     number: Mapped[int | None]
 
-    appearances: Mapped[list[Appearance]] = relationship(back_populates="player")
-    events: Mapped[list[GameEvent]] = relationship(back_populates="player")
+    appearances: Mapped[list[DBAppearance]] = relationship(back_populates="player")
+    events: Mapped[list[DBGameEvent]] = relationship(back_populates="player")
 
 
-class Game(Base):
+class DBGame(Base):
     __tablename__ = "games"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -60,15 +60,15 @@ class Game(Base):
     goals_odin: Mapped[int | None]
     goals_opponent: Mapped[int | None]
 
-    appearances: Mapped[list[Appearance]] = relationship(back_populates="game")
-    events: Mapped[list[GameEvent]] = relationship(back_populates="game")
+    appearances: Mapped[list[DBAppearance]] = relationship(back_populates="game")
+    events: Mapped[list[DBGameEvent]] = relationship(back_populates="game")
 
     __table_args__ = (
         CheckConstraint("goals_odin >= 0 AND goals_opponent >= 0", name="goals_nonneg"),
     )
 
 
-class Appearance(Base):
+class DBAppearance(Base):
     __tablename__ = "appearances"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -81,15 +81,15 @@ class Appearance(Base):
     started: Mapped[bool | None]
     minutes_played: Mapped[int | None]
 
-    game: Mapped[Game] = relationship(back_populates="appearances")
-    player: Mapped[Player] = relationship(back_populates="appearances")
+    game: Mapped[DBGame] = relationship(back_populates="appearances")
+    player: Mapped[DBPlayer] = relationship(back_populates="appearances")
 
     __table_args__ = (
         UniqueConstraint("game_id", "player_id", name="uq_appearances_game_player"),
     )
 
 
-class GameEvent(Base):
+class DBGameEvent(Base):
     __tablename__ = "events"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -108,5 +108,5 @@ class GameEvent(Base):
     )
     minute: Mapped[int | None]
 
-    game: Mapped[Game] = relationship(back_populates="events")
-    player: Mapped[Player] = relationship(back_populates="events")
+    game: Mapped[DBGame] = relationship(back_populates="events")
+    player: Mapped[DBPlayer] = relationship(back_populates="events")

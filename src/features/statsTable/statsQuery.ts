@@ -1,7 +1,7 @@
 import Papa from 'papaparse'
 import { queryOptions, useSuspenseQueries } from '@tanstack/react-query'
 import { playersQueryOptions } from '#/features/players/playersQuery'
-import type { PlayerRow } from '#/features/players/playersQuery'
+import type { Player } from '#/features/players/playersQuery'
 import { apiConfig } from '#/config/apiConfig'
 
 export type StatsRow = {
@@ -38,7 +38,7 @@ export function usePlayerStats(): PlayerStatsRow[] {
 
 function addPlayerNames(
   stats: StatsRow[],
-  players: PlayerRow[],
+  players: Player[],
 ): PlayerStatsRow[] {
   const playersById = new Map(players.map((player) => [player.id, player]))
 
@@ -47,14 +47,14 @@ function addPlayerNames(
 
 function addPlayerName(
   row: StatsRow,
-  playersById: Map<number, PlayerRow>,
+  playersById: Map<number, Player>,
 ): PlayerStatsRow {
   const player = playersById.get(row.player_id)
 
   return {
     ...row,
-    first_name: player?.first_name ?? '',
-    last_name: player?.last_name ?? '',
+    first_name: player?.firstName ?? '',
+    last_name: player?.lastName ?? '',
   }
 }
 

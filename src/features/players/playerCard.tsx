@@ -1,11 +1,11 @@
 import { Card, Image, Text } from '@mantine/core'
 import { Link } from '@tanstack/react-router'
-import type { PlayerRow } from './playersQuery'
+import type { Player } from '#/features/players/playersQuery'
 import { ShirtNumber } from './components/shirtNumber/shirtNumber'
 import classes from './playerCard.module.css'
 
 type PlayerCardProps = {
-  player: PlayerRow
+  player: Player
 }
 
 type PlayerCardColumn = {
@@ -40,10 +40,10 @@ export function PlayerCard({ player }: PlayerCardProps) {
         />
       </Card.Section>
       <Text size="sm" mt="md">
-        {player.first_name}
+        {player.firstName}
       </Text>
       <Text fw={700} tt="uppercase">
-        {player.last_name}
+        {player.lastName}
       </Text>
       <div className={classes.details}>
         {columns.map((column) => (
@@ -56,23 +56,23 @@ export function PlayerCard({ player }: PlayerCardProps) {
             </Text>
           </div>
         ))}
-        {player.number !== null && (
-          <ShirtNumber number={player.number} role={player.role} />
+        {player.shirtNumber !== null && (
+          <ShirtNumber number={player.shirtNumber} role={player.role} />
         )}
       </div>
     </Card>
   )
 }
 
-function mapColumns(row: PlayerRow): PlayerCardColumn[] {
+function mapColumns(row: Player): PlayerCardColumn[] {
   return [
     { key: 'role', label: 'Rol', value: row.role },
     { key: 'position', label: 'Positie', value: row.position },
   ]
 }
 
-export function playerPhotoUrl(player: PlayerRow): string {
-  const slug = `${player.first_name} ${player.last_name}`
+export function playerPhotoUrl(player: Player): string {
+  const slug = `${player.firstName} ${player.lastName}`
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase()

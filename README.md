@@ -1,6 +1,6 @@
 # odin9
 
-A stats dashboard for players. Player and match statistics are read from a published Google Sheet (as CSV) and shown in a table.
+A stats dashboard for players. Players come from the odin9 API (`backend/`); match statistics are still read from a published Google Sheet (as CSV) and shown in a table.
 
 ## Getting started
 
@@ -8,6 +8,8 @@ A stats dashboard for players. Player and match statistics are read from a publi
 npm install
 npm run dev       # dev server on http://localhost:3000
 ```
+
+The players come from the API at `VITE_API_URL`, which `.env.development` sets to `http://localhost:8000`. Run the backend next to the dev server (see [Backend](#backend)).
 
 Build and preview a production bundle:
 
@@ -25,21 +27,23 @@ npm run preview
 | [TanStack Router](https://tanstack.com/router)                                                                                                 | Type-safe, file-based routing               |
 | [TanStack Query](https://tanstack.com/query)                                                                                                   | Data fetching, caching and suspense queries |
 | [Mantine](https://mantine.dev/) (`@mantine/core`, `@mantine/hooks`)                                                                            | UI components and styling                   |
-| [PapaParse](https://www.papaparse.com/)                                                                                                        | Parsing the CSV responses                   |
+| [PapaParse](https://www.papaparse.com/)                                                                                                        | Parsing the sheet's CSV responses           |
 | [ESLint](https://eslint.org/) ([`@tanstack/eslint-config`](https://tanstack.com/config/latest/docs/eslint)) + [Prettier](https://prettier.io/) | Linting and formatting                      |
 
 ## API endpoints
 
 Every endpoint is defined in [`src/config/apiConfig.ts`](src/config/apiConfig.ts). Feature code imports the URL from `apiConfig` instead of hardcoding it.
 
-The data comes from tabs of one published Google Sheet, so each endpoint is built from its tab's `gid`:
+Players come from the odin9 API. The other data still comes from tabs of one published Google Sheet, so those endpoints are built from the tab's `gid`:
 
 ```ts
 export const apiConfig = {
-  players: sheetCsvUrl(0),
+  players: `${import.meta.env.VITE_API_URL}/players`,
   stats: sheetCsvUrl(462371454),
 } as const
 ```
+
+Each API query calls `fetch` itself and checks the response with a Zod schema; sheet tabs are fetched with `fetchCsv` (`src/lib/fetchCsv.ts`).
 
 To add a new endpoint, add an entry to `apiConfig`.
 
@@ -64,3 +68,24 @@ npm run lint      # eslint
 npm run format    # prettier --write + eslint --fix
 npm run check     # prettier --check
 ```
+
+## Backend
+
+The API lives in [`backend/`](backend): FastAPI, SQLAlchemy and Alembic on Postgres. Reads are public and rate limited to 120 requests per minute per IP.
+
+Run it locally (needs Docker and [uv](https://docs.astral.sh/uv/)):
+
+```bash
+cd backend
+docker compose up -d                       # Postgres on localhost:5433
+cp .env.example .env
+uv run alembic upgrade head
+uv run uvicorn app.main:app --reload       # http://localhost:8000/docs
+```
+
+After changing a model, create a migration with `uv run alembic revision --autogenerate -m "..."`, read the generated file, then run `uv run alembic upgrade head`.
+
+## Deployment
+
+- **Frontend:** every push to `main` builds and deploys to GitHub Pages. The build reads the repository variable `API_URL` (the Railway API domain, without a trailing slash) as `VITE_API_URL`, and fails when it isn't set.
+- **Backend:** Railway deploys `backend/` from `main` once CI passes, and runs `alembic upgrade head` before starting the new version.

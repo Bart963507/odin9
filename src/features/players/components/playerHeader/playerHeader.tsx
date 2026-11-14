@@ -1,11 +1,11 @@
 import { Image, Text } from '@mantine/core'
-import type { PlayerRow } from '../../playersQuery'
+import type { Player } from '#/features/players/playersQuery'
 import { playerPhotoUrl } from '../../playerCard'
 import { ShirtNumber } from '../shirtNumber/shirtNumber'
 import classes from './playerHeader.module.css'
 
 type PlayerHeaderProps = {
-  player: PlayerRow
+  player: Player
 }
 
 type PlayerHeaderColumn = {
@@ -28,9 +28,9 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
       />
       <div className={classes.bannerText}>
         <div className={classes.name}>
-          <Text size="lg">{player.first_name}</Text>
+          <Text size="lg">{player.firstName}</Text>
           <Text fz={32} fw={700} tt="uppercase" lh={1.1}>
-            {player.last_name}
+            {player.lastName}
           </Text>
         </div>
         <div className={classes.details}>
@@ -42,8 +42,12 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
               </Text>
             </div>
           ))}
-          {player.number !== null && (
-            <ShirtNumber number={player.number} role={player.role} inverted />
+          {player.shirtNumber !== null && (
+            <ShirtNumber
+              number={player.shirtNumber}
+              role={player.role}
+              inverted
+            />
           )}
         </div>
       </div>
@@ -51,7 +55,7 @@ export function PlayerHeader({ player }: PlayerHeaderProps) {
   )
 }
 
-function mapColumns(row: PlayerRow): PlayerHeaderColumn[] {
+function mapColumns(row: Player): PlayerHeaderColumn[] {
   return [
     { key: 'role', label: 'Rol', value: row.role },
     { key: 'position', label: 'Positie', value: row.position },

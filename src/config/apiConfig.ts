@@ -6,7 +6,7 @@ function sheetCsvUrl(gid: number): string {
 }
 
 export const apiConfig = {
-  players: sheetCsvUrl(0),
+  players: `${import.meta.env.VITE_API_URL}/players`,
   games: sheetCsvUrl(28422990),
   stats: sheetCsvUrl(462371454),
   events: sheetCsvUrl(437798517),

@@ -1,5 +1,5 @@
 import { SimpleGrid, Stack, Text } from '@mantine/core'
-import type { PlayerRow } from './playersQuery'
+import type { Player } from '#/features/players/playersQuery'
 import type { StatsRow } from '#/features/statsTable/statsQuery'
 import type { EventRow } from '#/features/events/eventsQuery'
 import { PlayerHeader } from './components/playerHeader/playerHeader'
@@ -10,7 +10,7 @@ import { ProfileRows } from './components/profileRows/profileRows'
 import type { ProfileRow } from './components/profileRows/profileRows'
 
 type PlayerProfileProps = {
-  player: PlayerRow
+  player: Player
   stats: StatsRow | undefined
   allStats: StatsRow[]
   events: EventRow[]
