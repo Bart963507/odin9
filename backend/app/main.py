@@ -17,7 +17,7 @@ app.add_middleware(
 
 app.include_router(players.router)
 
-
+#test deployments
 @app.get("/health")
 def health(session: SessionDependency) -> dict[str, str]:
     session.execute(text("SELECT 1"))
