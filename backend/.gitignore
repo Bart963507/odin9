@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+.ruff_cache/
+.mypy_cache/
+.env
+scripts/import_players.py

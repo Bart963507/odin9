@@ -1,0 +1,78 @@
+name: Backend CI
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - backend/**
+      - .github/workflows/backend-ci.yml
+  push:
+    branches: [main]
+    paths:
+      - backend/**
+      - .github/workflows/backend-ci.yml
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.13.7"
+          working-directory: backend
+      - name: install packages
+        run: uv sync --locked
+      - name: Ruff lint
+        run: uv run ruff check
+      - name: Ruff format
+        run: uv run ruff format --check
+      - name: Mypy
+        run: uv run mypy
+
+  migrations:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/postgres
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          version: "0.13.7"
+          working-directory: backend
+      - name: install packages
+        run: uv sync --locked
+      - name: Upgrade to head
+        run: uv run alembic upgrade head
+      - name: Models match migrations
+        run: uv run alembic check
+      - name: Downgrade to base
+        run: uv run alembic downgrade base
+      - name: Upgrade to head again
+        run: uv run alembic upgrade head
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build image
+        run: docker build .

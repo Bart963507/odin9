@@ -3,6 +3,9 @@ name: CI
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - backend/**
+      - .github/workflows/backend-ci.yml
 
 jobs:
   es-lint:
