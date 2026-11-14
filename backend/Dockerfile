@@ -14,8 +14,8 @@ RUN useradd --system --no-create-home app
 
 WORKDIR /app
 
-RUN --mount=type=bind,source=uv.lock,target=uv.lock \
-    uv sync --frozen --no-install-project
+COPY uv.lock ./
+RUN uv sync --frozen --no-install-project
 
 COPY . .
 RUN uv sync --locked
