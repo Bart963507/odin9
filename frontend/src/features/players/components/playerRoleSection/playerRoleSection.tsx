@@ -1,11 +1,11 @@
 import { SimpleGrid, Stack, Title } from '@mantine/core'
 import { PlayerCard } from '#/features/players/playerCard'
 import { PlayerRole } from '#/features/players/playersQuery'
-import type { PlayerRow } from '#/features/players/playersQuery'
+import type { Player } from '#/features/players/playersQuery'
 
 type PlayerRoleSectionProps = {
   role: PlayerRole
-  players: PlayerRow[]
+  players: Player[]
 }
 
 const ROLE_LABELS: Record<PlayerRole, string> = {

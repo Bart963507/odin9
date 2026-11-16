@@ -2,7 +2,7 @@ import { PlayerRole } from '#/features/players/playersQuery'
 import classes from './shirtNumber.module.css'
 
 type ShirtNumberProps = {
-  number: string
+  number: number
   role: PlayerRole
   inverted?: boolean
 }

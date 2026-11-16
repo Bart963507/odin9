@@ -30,13 +30,13 @@ function Players() {
   const { data: players } = useSuspenseQuery(playersQueryOptions)
   const [search, setSearch] = useState('')
   const sortedPlayers = [...players].sort((a, b) =>
-    a.last_name.localeCompare(b.last_name),
+    a.lastName.localeCompare(b.lastName),
   )
   const normalizedSearch = search.trim().toLowerCase()
   const filteredPlayers = sortedPlayers.filter(
     (player) =>
-      player.first_name.toLowerCase().includes(normalizedSearch) ||
-      player.last_name.toLowerCase().includes(normalizedSearch),
+      player.firstName.toLowerCase().includes(normalizedSearch) ||
+      player.lastName.toLowerCase().includes(normalizedSearch),
   )
 
   return (

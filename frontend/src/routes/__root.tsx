@@ -9,7 +9,16 @@ import { theme } from '#/theme'
 import '@mantine/core/styles.css'
 import '@mantine/charts/styles.css'
 
-const queryClient = new QueryClient()
+const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: FIVE_MINUTES_IN_MS,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 export const Route = createRootRoute({
   component: RootComponent,
