@@ -1,4 +1,4 @@
-import type { EventRow } from '#/features/events/eventsQuery'
+import type { GameEvent } from '#/features/events/eventsQuery'
 import {
   SEASON_GAMES,
   scaledDillenGoalsAfterRound,
@@ -12,7 +12,7 @@ export type CoenDillenChartRow = {
 
 export function coenDillenChartData(
   playerIds: number[],
-  events: EventRow[],
+  events: GameEvent[],
   currentRound: number,
 ): CoenDillenChartRow[] {
   const playerTotals = playerIds.map(
@@ -34,13 +34,13 @@ export function coenDillenChartData(
 }
 
 function cumulativeGoalsPerRound(
-  events: EventRow[],
+  events: GameEvent[],
   playerId: number,
 ): number[] {
   const totals = Array<number>(SEASON_GAMES + 1).fill(0)
   for (const event of events) {
-    if (event.event === 'goal' && event.player_id === playerId) {
-      totals[event.game]++
+    if (event.type === 'goal' && event.playerId === playerId) {
+      totals[event.gameId]++
     }
   }
   for (let round = 1; round <= SEASON_GAMES; round++) {

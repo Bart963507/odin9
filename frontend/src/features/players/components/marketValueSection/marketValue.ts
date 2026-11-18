@@ -1,21 +1,22 @@
-import type { StatsRow } from '#/features/statsTable/statsQuery'
-import type { EventRow, EventType } from '#/features/events/eventsQuery'
+import type { PlayerStats } from '#/features/statsTable/statsQuery'
+import type { EventType, GameEvent } from '#/features/events/eventsQuery'
+import type { Appearance } from '#/features/appearances/appearancesQuery'
 
 const BASE_VALUE = 50_000
 const MIN_VALUE = 10_000
 
 const MARKET_VALUE_WEIGHTS = [
-  { key: 'games_played', label: 'Wedstrijden', weight: 25_000 },
+  { key: 'gamesPlayed', label: 'Wedstrijden', weight: 25_000 },
   { key: 'goals', label: 'Doelpunten', weight: 100_000 },
   { key: 'assists', label: 'Assists', weight: 60_000 },
-  { key: 'own_goals', label: 'Eigen doelpunten', weight: -50_000 },
-  { key: 'yellow_cards', label: 'Gele kaarten', weight: -10_000 },
-  { key: 'red_cards', label: 'Rode kaarten', weight: -40_000 },
-  { key: 'throwins_failed', label: 'Mislukte inworpen', weight: -5_000 },
+  { key: 'ownGoals', label: 'Eigen doelpunten', weight: -50_000 },
+  { key: 'yellowCards', label: 'Gele kaarten', weight: -10_000 },
+  { key: 'redCards', label: 'Rode kaarten', weight: -40_000 },
+  { key: 'throwinsFailed', label: 'Mislukte inworpen', weight: -5_000 },
   { key: 'injuries', label: 'Blessures', weight: -30_000 },
-  { key: 'clean_sheets', label: 'Propere lakens', weight: 100_000 },
+  { key: 'cleanSheets', label: 'Propere lakens', weight: 100_000 },
 ] as const satisfies {
-  key: keyof StatsRow
+  key: keyof PlayerStats
   label: string
   weight: number
 }[]
@@ -31,11 +32,11 @@ export type MarketValue = {
   breakdown: MarketValueItem[]
 }
 
-export function marketValue(stats: StatsRow): MarketValue {
+export function marketValue(stats: PlayerStats): MarketValue {
   const breakdown = MARKET_VALUE_WEIGHTS.map(({ key, label, weight }) => ({
     key,
     label,
-    amount: (Number(stats[key]) || 0) * weight,
+    amount: stats[key] * weight,
   })).filter((item) => item.amount !== 0)
 
   const sum = breakdown.reduce((total, item) => total + item.amount, BASE_VALUE)
@@ -43,17 +44,15 @@ export function marketValue(stats: StatsRow): MarketValue {
   return { total: Math.max(sum, MIN_VALUE), breakdown }
 }
 
-// Stats that are also recorded per game in the events sheet.
-const EVENT_STATS: Record<EventType, keyof StatsRow> = {
-  game_played: 'games_played',
+const STAT_BY_EVENT_TYPE: Record<EventType, keyof PlayerStats> = {
   goal: 'goals',
   assist: 'assists',
-  own_goal: 'own_goals',
-  yellow_card: 'yellow_cards',
-  red_card: 'red_cards',
+  own_goal: 'ownGoals',
+  yellow_card: 'yellowCards',
+  red_card: 'redCards',
   injury: 'injuries',
-  clean_sheet: 'clean_sheets',
-  throwin_failed: 'throwins_failed',
+  clean_sheet: 'cleanSheets',
+  throwin_failed: 'throwinsFailed',
 }
 
 export type MarketValuePoint = {
@@ -62,65 +61,75 @@ export type MarketValuePoint = {
   value: number
 }
 
-/**
- * Market value after every game. Event-based stats land on the game they
- * happened in; stats without events (throw-ins)
- * have no game, so they are spread evenly over the season.
- */
 export function marketValueHistory(
-  stats: StatsRow,
-  events: EventRow[],
+  stats: PlayerStats,
+  events: GameEvent[],
+  appearances: Appearance[],
   seasonGames: number,
 ): MarketValuePoint[] {
-  const eventStats = new Set<keyof StatsRow>(Object.values(EVENT_STATS))
-  const weights = new Map<keyof StatsRow, number>(
-    MARKET_VALUE_WEIGHTS.map(({ key, weight }) => [key, weight]),
+  const amountByGame = marketValueAmountByGame(
+    stats.playerId,
+    events,
+    appearances,
   )
-
-  const spreadTotal = MARKET_VALUE_WEIGHTS.filter(
-    ({ key }) => !eventStats.has(key),
-  ).reduce(
-    (total, { key, weight }) => total + (Number(stats[key]) || 0) * weight,
-    0,
-  )
-  const spreadPerGame = seasonGames > 0 ? spreadTotal / seasonGames : 0
-
-  const eventAmountByGame = new Map<number, number>()
-  for (const event of events) {
-    if (event.player_id !== stats.player_id) continue
-    const weight = weights.get(EVENT_STATS[event.event]) ?? 0
-    eventAmountByGame.set(
-      event.game,
-      (eventAmountByGame.get(event.game) ?? 0) + weight,
-    )
-  }
 
   const points: MarketValuePoint[] = []
   const currentValue = marketValue(stats).total
-  let eventTotal = 0
+  let runningTotal = 0
   for (let game = 0; game <= seasonGames; game++) {
-    eventTotal += eventAmountByGame.get(game) ?? 0
+    runningTotal += amountByGame.get(game) ?? 0
     points.push({
       game,
       label: game === 0 ? 'Start' : `W${game}`,
       value:
         game === seasonGames
           ? currentValue
-          : Math.max(BASE_VALUE + spreadPerGame * game + eventTotal, MIN_VALUE),
+          : Math.max(BASE_VALUE + runningTotal, MIN_VALUE),
     })
   }
 
   return points
 }
 
+function marketValueAmountByGame(
+  playerId: number,
+  events: GameEvent[],
+  appearances: Appearance[],
+): Map<number, number> {
+  const weights = new Map<keyof PlayerStats, number>(
+    MARKET_VALUE_WEIGHTS.map(({ key, weight }) => [key, weight]),
+  )
+  const amountByGame = new Map<number, number>()
+
+  function addStatToGame(gameId: number, stat: keyof PlayerStats) {
+    amountByGame.set(
+      gameId,
+      (amountByGame.get(gameId) ?? 0) + (weights.get(stat) ?? 0),
+    )
+  }
+
+  for (const appearance of appearances) {
+    if (appearance.playerId === playerId) {
+      addStatToGame(appearance.gameId, 'gamesPlayed')
+    }
+  }
+  for (const event of events) {
+    if (event.playerId === playerId) {
+      addStatToGame(event.gameId, STAT_BY_EVENT_TYPE[event.type])
+    }
+  }
+
+  return amountByGame
+}
+
 export function seasonGameCount(
-  allStats: StatsRow[],
-  events: EventRow[],
+  appearances: Appearance[],
+  events: GameEvent[],
 ): number {
   return Math.max(
     0,
-    ...allStats.map((row) => Number(row.games_played) || 0),
-    ...events.map((event) => Number(event.game) || 0),
+    ...appearances.map((appearance) => appearance.gameId),
+    ...events.map((event) => event.gameId),
   )
 }
 

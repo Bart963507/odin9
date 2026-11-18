@@ -1,11 +1,11 @@
 import { Table } from '@mantine/core'
 import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
-import type { PlayerStatsRow } from './statsQuery'
+import type { PlayerStatsWithName } from './statsQuery'
 import classes from './statsTable.module.css'
 
 type StatsTableProps = {
-  rows: PlayerStatsRow[]
+  rows: PlayerStatsWithName[]
 }
 
 export function StatsTable({ rows }: StatsTableProps) {
@@ -75,12 +75,12 @@ export function StatsTable({ rows }: StatsTableProps) {
         <Table.Tbody>
           {sortedRows.map((row) => (
             <Table.Tr
-              key={row.id}
+              key={row.playerId}
               className={classes.row}
               onClick={() =>
                 navigate({
                   to: '/players/$playerId',
-                  params: { playerId: String(row.player_id) },
+                  params: { playerId: String(row.playerId) },
                 })
               }
             >
@@ -96,33 +96,33 @@ export function StatsTable({ rows }: StatsTableProps) {
 }
 
 type StatsColumn = {
-  key: keyof PlayerStatsRow | 'name'
+  key: keyof PlayerStatsWithName | 'name'
   label: string
   value: string | number
 }
 
 function getSortValue(
-  row: PlayerStatsRow,
+  row: PlayerStatsWithName,
   key: StatsColumn['key'],
 ): string | number {
-  return key === 'name' ? `${row.first_name} ${row.last_name}` : row[key]
+  return key === 'name' ? `${row.firstName} ${row.lastName}` : row[key]
 }
 
-function mapColumns(row: PlayerStatsRow): StatsColumn[] {
+function mapColumns(row: PlayerStatsWithName): StatsColumn[] {
   return [
-    { key: 'name', label: 'Naam', value: `${row.first_name} ${row.last_name}` },
-    { key: 'games_played', label: 'Wedstrijden', value: row.games_played },
+    { key: 'name', label: 'Naam', value: `${row.firstName} ${row.lastName}` },
+    { key: 'gamesPlayed', label: 'Wedstrijden', value: row.gamesPlayed },
     { key: 'goals', label: 'Doelpunten', value: row.goals },
     { key: 'assists', label: 'Assists', value: row.assists },
-    { key: 'own_goals', label: 'Eigen doelpunten', value: row.own_goals },
-    { key: 'yellow_cards', label: 'Gele kaarten', value: row.yellow_cards },
-    { key: 'red_cards', label: 'Rode kaarten', value: row.red_cards },
+    { key: 'ownGoals', label: 'Eigen doelpunten', value: row.ownGoals },
+    { key: 'yellowCards', label: 'Gele kaarten', value: row.yellowCards },
+    { key: 'redCards', label: 'Rode kaarten', value: row.redCards },
     {
-      key: 'throwins_failed',
+      key: 'throwinsFailed',
       label: 'Mislukte inworpen',
-      value: row.throwins_failed,
+      value: row.throwinsFailed,
     },
     { key: 'injuries', label: 'Blessures', value: row.injuries },
-    { key: 'clean_sheets', label: 'Propere lakens', value: row.clean_sheets },
+    { key: 'cleanSheets', label: 'Propere lakens', value: row.cleanSheets },
   ]
 }

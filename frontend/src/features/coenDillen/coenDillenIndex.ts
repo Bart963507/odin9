@@ -1,4 +1,4 @@
-import type { PlayerStatsRow } from '#/features/statsTable/statsQuery'
+import type { PlayerStatsWithName } from '#/features/statsTable/statsQuery'
 import { scaledDillenGoalsAfterRound } from '#/features/coenDillen/scaleCoenDillen'
 
 export type CoenDillenRankingRow = {
@@ -9,20 +9,16 @@ export type CoenDillenRankingRow = {
 }
 
 export function coenDillenRanking(
-  rows: PlayerStatsRow[],
+  rows: PlayerStatsWithName[],
   round: number,
 ): CoenDillenRankingRow[] {
   return rows
-    .map((row) => {
-      const goals = Number(row.goals) || 0
-
-      return {
-        playerId: row.player_id,
-        name: `${row.first_name} ${row.last_name}`,
-        goals,
-        index: coenDillenIndex(goals, round),
-      }
-    })
+    .map((row) => ({
+      playerId: row.playerId,
+      name: `${row.firstName} ${row.lastName}`,
+      goals: row.goals,
+      index: coenDillenIndex(row.goals, round),
+    }))
     .sort((a, b) => b.index - a.index)
 }
 

@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { Alert, Loader, Stack, Text, Title } from '@mantine/core'
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useSuspenseQueries } from '@tanstack/react-query'
 import { usePlayerStats } from '#/features/statsTable/statsQuery'
 import { eventsQueryOptions } from '#/features/events/eventsQuery'
+import { appearancesQueryOptions } from '#/features/appearances/appearancesQuery'
 import { seasonGameCount } from '#/features/players/components/marketValueSection/marketValue'
 import { ProfileSection } from '#/features/players/components/profileSection/profileSection'
 import {
@@ -27,8 +28,10 @@ export const Route = createFileRoute('/coen-dillen-index')({
 
 function CoenDillenIndexPage() {
   const rows = usePlayerStats()
-  const { data: events } = useSuspenseQuery(eventsQueryOptions)
-  const currentRound = seasonGameCount(rows, events)
+  const [{ data: events }, { data: appearances }] = useSuspenseQueries({
+    queries: [eventsQueryOptions, appearancesQueryOptions],
+  })
+  const currentRound = seasonGameCount(appearances, events)
   const ranking = coenDillenRanking(rows, currentRound)
 
   return (

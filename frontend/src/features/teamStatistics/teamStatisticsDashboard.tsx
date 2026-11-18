@@ -1,12 +1,12 @@
 import { Card, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core'
-import type { PlayerStatsRow } from '#/features/statsTable/statsQuery'
+import type { PlayerStatsWithName } from '#/features/statsTable/statsQuery'
 import {
   calculateTeamStatistics,
   gameResults,
   getPlayedGames,
 } from './teamStatistics'
 import type { GameResultStat } from './teamStatistics'
-import type { GameRow } from './gamesQuery'
+import type { Game } from './gamesQuery'
 import { AveragesCard } from './components/averagesCard/averagesCard'
 import { MatchOutcomeDonut } from './components/matchOutcomeDonut/matchOutcomeDonut'
 import { OutcomeBreakdown } from './components/outcomeBreakdown/outcomeBreakdown'
@@ -14,8 +14,8 @@ import { PlayerRecords } from './components/playerRecords/playerRecords'
 import { RecentFormCard } from './components/recentFormCard/recentFormCard'
 
 type TeamStatisticsDashboardProps = {
-  games: GameRow[]
-  players: PlayerStatsRow[]
+  games: Game[]
+  players: PlayerStatsWithName[]
 }
 
 export function TeamStatisticsDashboard({
@@ -25,7 +25,7 @@ export function TeamStatisticsDashboard({
   const statistics = calculateTeamStatistics(getPlayedGames(games))
   const played = statistics.gamesPlayed
   const failedThrowins = players.reduce(
-    (total, player) => total + player.throwins_failed,
+    (total, player) => total + player.throwinsFailed,
     0,
   )
   const outcomeStats: GameResultStat[] = [

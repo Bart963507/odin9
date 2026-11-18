@@ -1,25 +1,65 @@
 import { queryOptions } from '@tanstack/react-query'
+import { z } from 'zod'
 import { apiConfig } from '#/config/apiConfig'
-import { fetchCsv } from '#/lib/fetchCsv'
 
-export type EventType =
-  | 'game_played'
-  | 'goal'
-  | 'assist'
-  | 'own_goal'
-  | 'yellow_card'
-  | 'red_card'
-  | 'injury'
-  | 'clean_sheet'
-  | 'throwin_failed'
+const eventTypeSchema = z.enum([
+  'goal',
+  'own_goal',
+  'assist',
+  'yellow_card',
+  'red_card',
+  'throwin_failed',
+  'injury',
+  'clean_sheet',
+])
 
-export type EventRow = {
-  game: number
-  event: EventType
-  player_id: number
+export type EventType = z.infer<typeof eventTypeSchema>
+
+export type GameEvent = {
+  gameId: number
+  playerId: number
+  type: EventType
+  minute: number | null
 }
+
+const gameEventResponseSchema = z.object({
+  id: z.number(),
+  game_id: z.number(),
+  player_id: z.number(),
+  event_type: eventTypeSchema,
+  minute: z.number().nullable(),
+})
+
+type GameEventResponse = z.infer<typeof gameEventResponseSchema>
 
 export const eventsQueryOptions = queryOptions({
   queryKey: ['events'],
-  queryFn: ({ signal }) => fetchCsv<EventRow>(apiConfig.events, { signal }),
+  queryFn: ({ signal }) => fetchEvents({ signal }),
 })
+
+async function fetchEvents({
+  signal,
+}: {
+  signal: AbortSignal
+}): Promise<GameEvent[]> {
+  const response = await fetch(apiConfig.events, { signal })
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch events: ${response.status} ${response.statusText}`,
+    )
+  }
+
+  const events = z.array(gameEventResponseSchema).parse(await response.json())
+
+  return events.map(toGameEvent)
+}
+
+function toGameEvent(response: GameEventResponse): GameEvent {
+  return {
+    gameId: response.game_id,
+    playerId: response.player_id,
+    type: response.event_type,
+    minute: response.minute,
+  }
+}

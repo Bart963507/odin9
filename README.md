@@ -1,6 +1,6 @@
 # odin9
 
-A stats dashboard for players. Players come from the odin9 API; match statistics are still read from a published Google Sheet (as CSV) and shown in a table.
+A stats dashboard for players. All data (players, games, stats and match events) comes from the odin9 API.
 
 The repo has two parts:
 
@@ -15,7 +15,7 @@ npm install
 npm run dev       # dev server on http://localhost:3000
 ```
 
-The players come from the API at `VITE_API_URL`, which `frontend/.env.development` sets to `http://localhost:8000`. Run the backend next to the dev server (see [Backend](#backend)).
+All data comes from the API at `VITE_API_URL`, which `frontend/.env.development` sets to `http://localhost:8000`. Run the backend next to the dev server (see [Backend](#backend)).
 
 Build and preview a production bundle (from `frontend/`):
 
@@ -33,23 +33,34 @@ npm run preview
 | [TanStack Router](https://tanstack.com/router)                                                                                                 | Type-safe, file-based routing               |
 | [TanStack Query](https://tanstack.com/query)                                                                                                   | Data fetching, caching and suspense queries |
 | [Mantine](https://mantine.dev/) (`@mantine/core`, `@mantine/hooks`)                                                                            | UI components and styling                   |
-| [PapaParse](https://www.papaparse.com/)                                                                                                        | Parsing the sheet's CSV responses           |
+| [Zod](https://zod.dev/)                                                                                                                        | Validating API responses                    |
 | [ESLint](https://eslint.org/) ([`@tanstack/eslint-config`](https://tanstack.com/config/latest/docs/eslint)) + [Prettier](https://prettier.io/) | Linting and formatting                      |
 
 ## API endpoints
 
 Every endpoint is defined in [`frontend/src/config/apiConfig.ts`](frontend/src/config/apiConfig.ts). Feature code imports the URL from `apiConfig` instead of hardcoding it.
 
-Players come from the odin9 API. The other data still comes from tabs of one published Google Sheet, so those endpoints are built from the tab's `gid`:
-
 ```ts
+const API_URL = import.meta.env.VITE_API_URL
+
 export const apiConfig = {
-  players: `${import.meta.env.VITE_API_URL}/players`,
-  stats: sheetCsvUrl(462371454),
-} as const;
+	players: `${API_URL}/players`,
+	games: `${API_URL}/games`,
+	stats: `${API_URL}/stats`,
+	events: `${API_URL}/events`,
+	appearances: `${API_URL}/appearances`,
+} as const
 ```
 
-Each API query calls `fetch` itself and checks the response with a Zod schema; sheet tabs are fetched with `fetchCsv` (`frontend/src/lib/fetchCsv.ts`).
+| Endpoint           | Returns                                                             |
+| ------------------ | ------------------------------------------------------------------- |
+| `GET /players`     | Players with name, role, position and shirt number                  |
+| `GET /games`       | Games with date, teams, competition and score (`null` until played) |
+| `GET /stats`       | Totals per player, counted from events and appearances              |
+| `GET /events`      | Goals, assists, cards and other events per game                     |
+| `GET /appearances` | Which player played in which game                                   |
+
+Each query calls `fetch` itself, checks the raw (snake_case) response with a Zod schema, and maps it to a camelCase type that components use. See `frontend/src/features/players/playersQuery.tsx`.
 
 To add a new endpoint, add an entry to `apiConfig`.
 
