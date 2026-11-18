@@ -4,3 +4,4 @@ __pycache__/
 .mypy_cache/
 .env
 scripts/import_players.py
+scripts/import_sheet.py
