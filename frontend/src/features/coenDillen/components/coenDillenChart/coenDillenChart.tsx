@@ -1,7 +1,7 @@
 import { MultiSelect, Stack } from '@mantine/core'
 import { LineChart } from '@mantine/charts'
 import { useState } from 'react'
-import type { EventRow } from '#/features/events/eventsQuery'
+import type { GameEvent } from '#/features/events/eventsQuery'
 import { formatGoals } from '#/features/coenDillen/coenDillenIndex'
 import type { CoenDillenRankingRow } from '#/features/coenDillen/coenDillenIndex'
 import {
@@ -12,7 +12,7 @@ import classes from './coenDillenChart.module.css'
 
 type CoenDillenChartProps = {
   players: CoenDillenRankingRow[]
-  events: EventRow[]
+  events: GameEvent[]
   currentRound: number
 }
 

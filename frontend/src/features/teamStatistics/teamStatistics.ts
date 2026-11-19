@@ -1,6 +1,6 @@
 import type { MantineColor } from '@mantine/core'
-import type { PlayerStatsRow } from '#/features/statsTable/statsQuery'
-import type { GameRow } from './gamesQuery'
+import type { PlayerStatsWithName } from '#/features/statsTable/statsQuery'
+import type { Game } from './gamesQuery'
 
 export type GameResultKey = 'win' | 'draw' | 'loss'
 
@@ -46,26 +46,19 @@ export type TeamStatistics = {
   recentForm: PlayedGame[]
 }
 
-export function getPlayedGames(rows: GameRow[]): PlayedGame[] {
-  return rows
-    .map((row): PlayedGame | null => {
-      const goalsFor = Number(row.goals_odin)
-      const goalsAgainst = Number(row.goals_opponent)
+export function getPlayedGames(games: Game[]): PlayedGame[] {
+  return games
+    .map((game): PlayedGame | null => {
+      const goalsFor = game.goalsOdin
+      const goalsAgainst = game.goalsOpponent
 
-      if (
-        !Number.isFinite(goalsFor) ||
-        !Number.isFinite(goalsAgainst) ||
-        row.goals_odin === null ||
-        row.goals_opponent === null ||
-        row.goals_odin === '' ||
-        row.goals_opponent === ''
-      ) {
+      if (goalsFor === null || goalsAgainst === null) {
         return null
       }
 
       return {
-        id: Number(row.id),
-        date: row.date,
+        id: game.id,
+        date: game.date,
         goalsFor,
         goalsAgainst,
         result:
@@ -101,37 +94,37 @@ export function calculateTeamStatistics(games: PlayedGame[]): TeamStatistics {
 }
 
 export const playerLeaderStats = [
-  { key: 'games_played', label: 'Wedstrijden', singularLabel: 'Wedstrijd' },
+  { key: 'gamesPlayed', label: 'Wedstrijden', singularLabel: 'Wedstrijd' },
   { key: 'goals', label: 'Doelpunten', singularLabel: 'Doelpunt' },
   { key: 'assists', label: 'Assists', singularLabel: 'Assist' },
   {
-    key: 'own_goals',
+    key: 'ownGoals',
     label: 'Eigen doelpunten',
     singularLabel: 'Eigen doelpunt',
   },
-  { key: 'yellow_cards', label: 'Gele kaarten', singularLabel: 'Gele kaart' },
-  { key: 'red_cards', label: 'Rode kaarten', singularLabel: 'Rode kaart' },
+  { key: 'yellowCards', label: 'Gele kaarten', singularLabel: 'Gele kaart' },
+  { key: 'redCards', label: 'Rode kaarten', singularLabel: 'Rode kaart' },
   {
-    key: 'throwins_failed',
+    key: 'throwinsFailed',
     label: 'Mislukte inworpen',
     singularLabel: 'Mislukte inworp',
   },
   { key: 'injuries', label: 'Blessures', singularLabel: 'Blessure' },
   {
-    key: 'clean_sheets',
+    key: 'cleanSheets',
     label: 'Propere lakens',
     singularLabel: 'Proper laken',
   },
 ] as const satisfies readonly {
-  key: keyof PlayerStatsRow
+  key: keyof PlayerStatsWithName
   label: string
   singularLabel: string
 }[]
 
 export function getPlayerLeaders(
-  players: PlayerStatsRow[],
+  players: PlayerStatsWithName[],
   key: (typeof playerLeaderStats)[number]['key'],
-): PlayerStatsRow[] {
+): PlayerStatsWithName[] {
   if (players.length === 0) return []
 
   const highestValue = Math.max(...players.map((player) => player[key]))

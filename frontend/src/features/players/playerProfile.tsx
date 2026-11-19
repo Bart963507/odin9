@@ -1,7 +1,8 @@
 import { SimpleGrid, Stack, Text } from '@mantine/core'
 import type { Player } from '#/features/players/playersQuery'
-import type { StatsRow } from '#/features/statsTable/statsQuery'
-import type { EventRow } from '#/features/events/eventsQuery'
+import type { PlayerStats } from '#/features/statsTable/statsQuery'
+import type { GameEvent } from '#/features/events/eventsQuery'
+import type { Appearance } from '#/features/appearances/appearancesQuery'
 import { PlayerHeader } from './components/playerHeader/playerHeader'
 import { MarketValueSection } from './components/marketValueSection/marketValueSection'
 import { StatTiles } from './components/statTiles/statTiles'
@@ -11,16 +12,16 @@ import type { ProfileRow } from './components/profileRows/profileRows'
 
 type PlayerProfileProps = {
   player: Player
-  stats: StatsRow | undefined
-  allStats: StatsRow[]
-  events: EventRow[]
+  stats: PlayerStats | undefined
+  events: GameEvent[]
+  appearances: Appearance[]
 }
 
 export function PlayerProfile({
   player,
   stats,
-  allStats,
   events,
+  appearances,
 }: PlayerProfileProps) {
   return (
     <Stack gap="lg">
@@ -29,8 +30,8 @@ export function PlayerProfile({
         <>
           <MarketValueSection
             stats={stats}
-            allStats={allStats}
             events={events}
+            appearances={appearances}
           />
           <StatTiles stats={stats} />
           <SimpleGrid cols={{ base: 1, md: 2 }}>
@@ -49,29 +50,29 @@ export function PlayerProfile({
   )
 }
 
-function profileRows(stats: StatsRow): ProfileRow[] {
+function profileRows(stats: PlayerStats): ProfileRow[] {
   return [
-    { key: 'games_played', label: 'Wedstrijden', value: stats.games_played },
+    { key: 'gamesPlayed', label: 'Wedstrijden', value: stats.gamesPlayed },
     { key: 'goals', label: 'Doelpunten', value: stats.goals },
     { key: 'assists', label: 'Assists', value: stats.assists },
     {
-      key: 'goals_per_game',
+      key: 'goalsPerGame',
       label: 'Doelpunten per wedstrijd',
-      value: perGame(stats.goals, stats.games_played),
+      value: perGame(stats.goals, stats.gamesPlayed),
     },
-    { key: 'clean_sheets', label: 'Propere lakens', value: stats.clean_sheets },
+    { key: 'cleanSheets', label: 'Propere lakens', value: stats.cleanSheets },
   ]
 }
 
-function disciplineRows(stats: StatsRow): ProfileRow[] {
+function disciplineRows(stats: PlayerStats): ProfileRow[] {
   return [
-    { key: 'yellow_cards', label: 'Gele kaarten', value: stats.yellow_cards },
-    { key: 'red_cards', label: 'Rode kaarten', value: stats.red_cards },
-    { key: 'own_goals', label: 'Eigen doelpunten', value: stats.own_goals },
+    { key: 'yellowCards', label: 'Gele kaarten', value: stats.yellowCards },
+    { key: 'redCards', label: 'Rode kaarten', value: stats.redCards },
+    { key: 'ownGoals', label: 'Eigen doelpunten', value: stats.ownGoals },
     {
-      key: 'throwins_failed',
+      key: 'throwinsFailed',
       label: 'Mislukte inworpen',
-      value: stats.throwins_failed,
+      value: stats.throwinsFailed,
     },
     { key: 'injuries', label: 'Blessures', value: stats.injuries },
   ]

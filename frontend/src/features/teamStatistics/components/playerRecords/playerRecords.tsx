@@ -1,6 +1,6 @@
 import { Card, SimpleGrid, Stack, Text, Title } from '@mantine/core'
 import { Link } from '@tanstack/react-router'
-import type { PlayerStatsRow } from '#/features/statsTable/statsQuery'
+import type { PlayerStatsWithName } from '#/features/statsTable/statsQuery'
 import {
   formatMarketValue,
   marketValue,
@@ -9,17 +9,17 @@ import { getPlayerLeaders, playerLeaderStats } from '../../teamStatistics'
 import classes from './playerRecords.module.css'
 
 type PlayerRecordsProps = {
-  players: PlayerStatsRow[]
+  players: PlayerStatsWithName[]
 }
 
 type PlayerStatRecordProps = {
-  players: PlayerStatsRow[]
+  players: PlayerStatsWithName[]
   stat: (typeof playerLeaderStats)[number]
 }
 
 type MarketValueRecordProps = {
   highestMarketValue: number
-  leaders: PlayerStatsRow[]
+  leaders: PlayerStatsWithName[]
 }
 
 function PlayerStatRecord({ players, stat }: PlayerStatRecordProps) {
@@ -35,12 +35,12 @@ function PlayerStatRecord({ players, stat }: PlayerStatRecordProps) {
         <Text size="xl" fw={700} className={classes.leaderNames}>
           {leaders.map((player) => (
             <Link
-              key={player.id}
+              key={player.playerId}
               to="/players/$playerId"
-              params={{ playerId: String(player.player_id) }}
+              params={{ playerId: String(player.playerId) }}
               className={classes.leaderLink}
             >
-              {player.first_name} {player.last_name}
+              {player.firstName} {player.lastName}
             </Link>
           ))}
         </Text>
@@ -64,12 +64,12 @@ function MarketValueRecord({
         <Text size="xl" fw={700} className={classes.leaderNames}>
           {leaders.map((player) => (
             <Link
-              key={player.id}
+              key={player.playerId}
               to="/players/$playerId"
-              params={{ playerId: String(player.player_id) }}
+              params={{ playerId: String(player.playerId) }}
               className={classes.leaderLink}
             >
-              {player.first_name} {player.last_name}
+              {player.firstName} {player.lastName}
             </Link>
           ))}
         </Text>

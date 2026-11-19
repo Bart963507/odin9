@@ -1,7 +1,8 @@
 import { Group, Text } from '@mantine/core'
 import { AreaChart } from '@mantine/charts'
-import type { StatsRow } from '#/features/statsTable/statsQuery'
-import type { EventRow } from '#/features/events/eventsQuery'
+import type { PlayerStats } from '#/features/statsTable/statsQuery'
+import type { GameEvent } from '#/features/events/eventsQuery'
+import type { Appearance } from '#/features/appearances/appearancesQuery'
 import {
   formatMarketValue,
   marketValue,
@@ -12,21 +13,22 @@ import { ProfileSection } from '../profileSection/profileSection'
 import classes from './marketValueSection.module.css'
 
 type MarketValueSectionProps = {
-  stats: StatsRow
-  allStats: StatsRow[]
-  events: EventRow[]
+  stats: PlayerStats
+  events: GameEvent[]
+  appearances: Appearance[]
 }
 
 export function MarketValueSection({
   stats,
-  allStats,
   events,
+  appearances,
 }: MarketValueSectionProps) {
   const value = marketValue(stats)
   const history = marketValueHistory(
     stats,
     events,
-    seasonGameCount(allStats, events),
+    appearances,
+    seasonGameCount(appearances, events),
   )
   const highest = history.reduce((max, point) =>
     point.value > max.value ? point : max,

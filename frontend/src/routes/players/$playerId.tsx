@@ -4,6 +4,7 @@ import { useSuspenseQueries } from '@tanstack/react-query'
 import { playersQueryOptions } from '#/features/players/playersQuery'
 import { statsQueryOptions } from '#/features/statsTable/statsQuery'
 import { eventsQueryOptions } from '#/features/events/eventsQuery'
+import { appearancesQueryOptions } from '#/features/appearances/appearancesQuery'
 import { PlayerProfile } from '#/features/players/playerProfile'
 
 export const Route = createFileRoute('/players/$playerId')({
@@ -18,10 +19,19 @@ export const Route = createFileRoute('/players/$playerId')({
 
 function PlayerPage() {
   const { playerId } = Route.useParams()
-  const [{ data: players }, { data: stats }, { data: events }] =
-    useSuspenseQueries({
-      queries: [playersQueryOptions, statsQueryOptions, eventsQueryOptions],
-    })
+  const [
+    { data: players },
+    { data: stats },
+    { data: events },
+    { data: appearances },
+  ] = useSuspenseQueries({
+    queries: [
+      playersQueryOptions,
+      statsQueryOptions,
+      eventsQueryOptions,
+      appearancesQueryOptions,
+    ],
+  })
   const player = players.find((p) => p.id === Number(playerId))
 
   if (!player) {
@@ -31,9 +41,9 @@ function PlayerPage() {
   return (
     <PlayerProfile
       player={player}
-      stats={stats.find((row) => row.player_id === player.id)}
-      allStats={stats}
+      stats={stats.find((row) => row.playerId === player.id)}
       events={events}
+      appearances={appearances}
     />
   )
 }

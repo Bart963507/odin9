@@ -1,13 +1,9 @@
-const SHEET_BASE_URL =
-  'https://docs.google.com/spreadsheets/d/e/2PACX-1vR8VCJuDwVv_npRVDvUTVK-GFhFz9-K13lIbvH0MaMh-0AqxLiITt7nJ2T8-DEXlcCHgSek9dtHHAYn/pub'
-
-function sheetCsvUrl(gid: number): string {
-  return `${SHEET_BASE_URL}?gid=${gid}&single=true&output=csv`
-}
+const API_URL = import.meta.env.VITE_API_URL
 
 export const apiConfig = {
-  players: `${import.meta.env.VITE_API_URL}/players`,
-  games: sheetCsvUrl(28422990),
-  stats: sheetCsvUrl(462371454),
-  events: sheetCsvUrl(437798517),
+  players: `${API_URL}/players`,
+  games: `${API_URL}/games`,
+  stats: `${API_URL}/stats`,
+  events: `${API_URL}/events`,
+  appearances: `${API_URL}/appearances`,
 } as const
