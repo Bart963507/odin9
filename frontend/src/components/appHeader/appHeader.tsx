@@ -1,6 +1,7 @@
-import { Burger, Group, Title } from '@mantine/core'
+import { Burger, Button, Group, Title } from '@mantine/core'
 import { Link } from '@tanstack/react-router'
 import { NavLinks } from '#/components/navLinks'
+import { useLogOut } from '#/features/auth/useLogOut'
 import classes from './appHeader.module.css'
 
 type AppHeaderProps = {
@@ -9,6 +10,8 @@ type AppHeaderProps = {
 }
 
 export function AppHeader({ navOpened, onToggleNav }: AppHeaderProps) {
+  const logOut = useLogOut()
+
   return (
     <Group h="100%" px="md" gap="xl">
       <Group gap="sm" wrap="nowrap">
@@ -33,6 +36,9 @@ export function AppHeader({ navOpened, onToggleNav }: AppHeaderProps) {
       <Group gap="xs" visibleFrom="sm">
         <NavLinks variant="header" />
       </Group>
+      <Button variant="subtle" onClick={logOut} className={classes.logOut}>
+        Uitloggen
+      </Button>
     </Group>
   )
 }

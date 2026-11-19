@@ -90,21 +90,23 @@ npm run check     # prettier --check
 
 ## Backend
 
-The API lives in [`backend/`](backend): FastAPI, SQLAlchemy and Alembic on Postgres. Reads are public and rate limited to 120 requests per minute per IP.
+The API lives in [`backend/`](backend): FastAPI, SQLAlchemy and Alembic on Postgres. Every endpoint except `/health` and `/auth/login` needs a token. Log in with the shared site password (`POST /auth/login`), then send `Authorization: Bearer <token>`, or use the Authorize button in `/docs`. Requests are rate limited to 120 per minute per IP, and logins to 5 per minute in total.
 
 Run it locally (needs Docker and [uv](https://docs.astral.sh/uv/)):
 
 ```bash
 cd backend
 docker compose up -d                       # Postgres on localhost:5433
-cp .env.example .env
+cp .env.example .env                       # local site password: odin-local
 uv run alembic upgrade head
 uv run fastapi dev                         # http://localhost:8000/docs
 ```
+
+Run `fastapi dev` without a file path: it reads the entrypoint `app.main:app` from `pyproject.toml`. With `app/main.py` it fails with `No module named 'app'`.
 
 After changing a model, create a migration with `uv run alembic revision --autogenerate -m "..."`, read the generated file, then run `uv run alembic upgrade head`.
 
 ## Deployment
 
 - **Frontend:** every push to `main` that changes `frontend/` builds and deploys to GitHub Pages. The build reads the repository variable `API_URL` (the Railway API domain, without a trailing slash) as `VITE_API_URL`, and fails when it isn't set.
-- **Backend:** Railway deploys `backend/` from `main` once CI passes, and runs `alembic upgrade head` before starting the new version.
+- **Backend:** Railway deploys `backend/` from `main` once CI passes, and runs `alembic upgrade head` before starting the new version. The API needs the Railway variables `SITE_PASSWORD` (at least 8 characters) and `JWT_SECRET` (at least 32 characters) and won't start without them.

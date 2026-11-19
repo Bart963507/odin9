@@ -9,138 +9,189 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as CoenDillenIndexRouteImport } from './routes/coen-dillen-index'
-import { Route as TeamStatisticsRouteImport } from './routes/team-statistics'
-import { Route as PlayersIndexRouteImport } from './routes/players/index'
-import { Route as PlayersPlayerIdRouteImport } from './routes/players/$playerId'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedCoenDillenIndexRouteImport } from './routes/_authenticated/coen-dillen-index'
+import { Route as AuthenticatedTeamStatisticsRouteImport } from './routes/_authenticated/team-statistics'
+import { Route as AuthenticatedPlayersIndexRouteImport } from './routes/_authenticated/players/index'
+import { Route as AuthenticatedPlayersPlayerIdRouteImport } from './routes/_authenticated/players/$playerId'
 
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
-const CoenDillenIndexRoute = CoenDillenIndexRouteImport.update({
-  id: '/coen-dillen-index',
-  path: '/coen-dillen-index',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const TeamStatisticsRoute = TeamStatisticsRouteImport.update({
-  id: '/team-statistics',
-  path: '/team-statistics',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlayersIndexRoute = PlayersIndexRouteImport.update({
-  id: '/players/',
-  path: '/players/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlayersPlayerIdRoute = PlayersPlayerIdRouteImport.update({
-  id: '/players/$playerId',
-  path: '/players/$playerId',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const AuthenticatedCoenDillenIndexRoute =
+  AuthenticatedCoenDillenIndexRouteImport.update({
+    id: '/coen-dillen-index',
+    path: '/coen-dillen-index',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedTeamStatisticsRoute =
+  AuthenticatedTeamStatisticsRouteImport.update({
+    id: '/team-statistics',
+    path: '/team-statistics',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedPlayersIndexRoute =
+  AuthenticatedPlayersIndexRouteImport.update({
+    id: '/players/',
+    path: '/players/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedPlayersPlayerIdRoute =
+  AuthenticatedPlayersPlayerIdRouteImport.update({
+    id: '/players/$playerId',
+    path: '/players/$playerId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/coen-dillen-index': typeof CoenDillenIndexRoute
-  '/team-statistics': typeof TeamStatisticsRoute
-  '/players/$playerId': typeof PlayersPlayerIdRoute
-  '/players/': typeof PlayersIndexRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/login': typeof LoginRoute
+  '/coen-dillen-index': typeof AuthenticatedCoenDillenIndexRoute
+  '/team-statistics': typeof AuthenticatedTeamStatisticsRoute
+  '/players/$playerId': typeof AuthenticatedPlayersPlayerIdRoute
+  '/players/': typeof AuthenticatedPlayersIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/coen-dillen-index': typeof CoenDillenIndexRoute
-  '/team-statistics': typeof TeamStatisticsRoute
-  '/players/$playerId': typeof PlayersPlayerIdRoute
-  '/players': typeof PlayersIndexRoute
+  '/login': typeof LoginRoute
+  '/coen-dillen-index': typeof AuthenticatedCoenDillenIndexRoute
+  '/team-statistics': typeof AuthenticatedTeamStatisticsRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/players/$playerId': typeof AuthenticatedPlayersPlayerIdRoute
+  '/players': typeof AuthenticatedPlayersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/coen-dillen-index': typeof CoenDillenIndexRoute
-  '/team-statistics': typeof TeamStatisticsRoute
-  '/players/$playerId': typeof PlayersPlayerIdRoute
-  '/players/': typeof PlayersIndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_authenticated/coen-dillen-index': typeof AuthenticatedCoenDillenIndexRoute
+  '/_authenticated/team-statistics': typeof AuthenticatedTeamStatisticsRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/players/$playerId': typeof AuthenticatedPlayersPlayerIdRoute
+  '/_authenticated/players/': typeof AuthenticatedPlayersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/login'
     | '/coen-dillen-index'
     | '/team-statistics'
     | '/players/$playerId'
     | '/players/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
+    | '/login'
     | '/coen-dillen-index'
     | '/team-statistics'
+    | '/'
     | '/players/$playerId'
     | '/players'
   id:
     | '__root__'
-    | '/'
-    | '/coen-dillen-index'
-    | '/team-statistics'
-    | '/players/$playerId'
-    | '/players/'
+    | '/_authenticated'
+    | '/login'
+    | '/_authenticated/coen-dillen-index'
+    | '/_authenticated/team-statistics'
+    | '/_authenticated/'
+    | '/_authenticated/players/$playerId'
+    | '/_authenticated/players/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CoenDillenIndexRoute: typeof CoenDillenIndexRoute
-  TeamStatisticsRoute: typeof TeamStatisticsRoute
-  PlayersPlayerIdRoute: typeof PlayersPlayerIdRoute
-  PlayersIndexRoute: typeof PlayersIndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/coen-dillen-index': {
-      id: '/coen-dillen-index'
+    '/_authenticated/coen-dillen-index': {
+      id: '/_authenticated/coen-dillen-index'
       path: '/coen-dillen-index'
       fullPath: '/coen-dillen-index'
-      preLoaderRoute: typeof CoenDillenIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedCoenDillenIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/team-statistics': {
-      id: '/team-statistics'
+    '/_authenticated/team-statistics': {
+      id: '/_authenticated/team-statistics'
       path: '/team-statistics'
       fullPath: '/team-statistics'
-      preLoaderRoute: typeof TeamStatisticsRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTeamStatisticsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/players/': {
-      id: '/players/'
+    '/_authenticated/players/': {
+      id: '/_authenticated/players/'
       path: '/players'
       fullPath: '/players/'
-      preLoaderRoute: typeof PlayersIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedPlayersIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
-    '/players/$playerId': {
-      id: '/players/$playerId'
+    '/_authenticated/players/$playerId': {
+      id: '/_authenticated/players/$playerId'
       path: '/players/$playerId'
       fullPath: '/players/$playerId'
-      preLoaderRoute: typeof PlayersPlayerIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedPlayersPlayerIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedCoenDillenIndexRoute: typeof AuthenticatedCoenDillenIndexRoute
+  AuthenticatedTeamStatisticsRoute: typeof AuthenticatedTeamStatisticsRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedPlayersPlayerIdRoute: typeof AuthenticatedPlayersPlayerIdRoute
+  AuthenticatedPlayersIndexRoute: typeof AuthenticatedPlayersIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedCoenDillenIndexRoute: AuthenticatedCoenDillenIndexRoute,
+  AuthenticatedTeamStatisticsRoute: AuthenticatedTeamStatisticsRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedPlayersPlayerIdRoute: AuthenticatedPlayersPlayerIdRoute,
+  AuthenticatedPlayersIndexRoute: AuthenticatedPlayersIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  CoenDillenIndexRoute: CoenDillenIndexRoute,
-  TeamStatisticsRoute: TeamStatisticsRoute,
-  PlayersPlayerIdRoute: PlayersPlayerIdRoute,
-  PlayersIndexRoute: PlayersIndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

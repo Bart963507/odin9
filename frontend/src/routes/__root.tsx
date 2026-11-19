@@ -1,21 +1,27 @@
 import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { AppShell, Container, MantineProvider } from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { NavLinks } from '#/components/navLinks'
-import { AppHeader } from '#/components/appHeader/appHeader'
+import { MantineProvider } from '@mantine/core'
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+import { UnauthorizedError } from '#/features/auth/authErrors'
+import { clearAuthToken } from '#/features/auth/authToken'
 import { theme } from '#/theme'
 
 import '@mantine/core/styles.css'
 import '@mantine/charts/styles.css'
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
+const MAX_QUERY_RETRIES = 3
 
 const queryClient = new QueryClient({
+  queryCache: new QueryCache({ onError: returnToLoginWhenUnauthorized }),
   defaultOptions: {
     queries: {
       staleTime: FIVE_MINUTES_IN_MS,
       refetchOnWindowFocus: false,
+      retry: retryUnlessUnauthorized,
     },
   },
 })
@@ -28,38 +34,21 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme}>
-        <Layout />
+        <Outlet />
       </MantineProvider>
     </QueryClientProvider>
   )
 }
 
-function Layout() {
-  const [opened, { toggle, close }] = useDisclosure()
+function returnToLoginWhenUnauthorized(error: Error) {
+  if (error instanceof UnauthorizedError) {
+    clearAuthToken()
+    window.location.reload()
+  }
+}
 
+function retryUnlessUnauthorized(failureCount: number, error: Error): boolean {
   return (
-    <AppShell
-      header={{ height: 68 }}
-      navbar={{
-        width: 250,
-        breakpoint: 'sm',
-        collapsed: { desktop: true, mobile: !opened },
-      }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <AppHeader navOpened={opened} onToggleNav={toggle} />
-      </AppShell.Header>
-
-      <AppShell.Navbar p="md">
-        <NavLinks variant="navbar" onNavigate={close} />
-      </AppShell.Navbar>
-
-      <AppShell.Main bg="gray.0">
-        <Container size="xl" px={0} py="md">
-          <Outlet />
-        </Container>
-      </AppShell.Main>
-    </AppShell>
+    !(error instanceof UnauthorizedError) && failureCount < MAX_QUERY_RETRIES
   )
 }
