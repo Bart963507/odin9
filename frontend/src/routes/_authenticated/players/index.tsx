@@ -16,7 +16,7 @@ import {
 } from '#/features/players/playersQuery'
 import { PlayerRoleSection } from '#/features/players/components/playerRoleSection/playerRoleSection'
 
-export const Route = createFileRoute('/players/')({
+export const Route = createFileRoute('/_authenticated/players/')({
   component: Players,
   pendingComponent: () => <Loader />,
   errorComponent: ({ error }) => (

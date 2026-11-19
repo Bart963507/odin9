@@ -8,6 +8,7 @@ from limits.storage import MemoryStorage
 from limits.strategies import MovingWindowRateLimiter
 
 RAILWAY_CLIENT_IP_HEADER = "x-real-ip"
+ALL_CLIENTS_KEY = "all-clients"
 
 rate_limiter = MovingWindowRateLimiter(MemoryStorage())
 
@@ -16,18 +17,32 @@ def rate_limit(limit: str, namespace: str) -> Callable[[Request], None]:
     rate_limit_item = parse(limit)
 
     def enforce_rate_limit(request: Request) -> None:
-        client_address = client_address_of(request)
-        if not rate_limiter.hit(rate_limit_item, namespace, client_address):
-            retry_after = seconds_until_reset(
-                rate_limit_item, namespace, client_address
-            )
-            raise HTTPException(
-                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail=f"Too many requests, limit is {limit}",
-                headers={"Retry-After": str(retry_after)},
-            )
+        enforce_limit_for_key(
+            rate_limit_item, limit, namespace, client_address_of(request)
+        )
 
     return enforce_rate_limit
+
+
+def global_rate_limit(limit: str, namespace: str) -> Callable[[], None]:
+    rate_limit_item = parse(limit)
+
+    def enforce_global_rate_limit() -> None:
+        enforce_limit_for_key(rate_limit_item, limit, namespace, ALL_CLIENTS_KEY)
+
+    return enforce_global_rate_limit
+
+
+def enforce_limit_for_key(
+    rate_limit_item: RateLimitItem, limit: str, namespace: str, key: str
+) -> None:
+    if not rate_limiter.hit(rate_limit_item, namespace, key):
+        retry_after = seconds_until_reset(rate_limit_item, namespace, key)
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Too many requests, limit is {limit}",
+            headers={"Retry-After": str(retry_after)},
+        )
 
 
 def client_address_of(request: Request) -> str:

@@ -1,0 +1,19 @@
+.page {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: var(--mantine-spacing-md);
+  background: var(--mantine-color-gray-0);
+}
+
+.card {
+  width: 100%;
+  max-width: 360px;
+}
+
+.logo {
+  display: block;
+  height: 72px;
+  width: auto;
+  margin: 0 auto;
+}

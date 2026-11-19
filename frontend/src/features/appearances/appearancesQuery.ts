@@ -1,6 +1,8 @@
 import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
 import { apiConfig } from '#/config/apiConfig'
+import { UnauthorizedError } from '#/features/auth/authErrors'
+import { authorizationHeader } from '#/features/auth/authToken'
 
 export type Appearance = {
   gameId: number
@@ -27,7 +29,14 @@ async function fetchAppearances({
 }: {
   signal: AbortSignal
 }): Promise<Appearance[]> {
-  const response = await fetch(apiConfig.appearances, { signal })
+  const response = await fetch(apiConfig.appearances, {
+    signal,
+    headers: authorizationHeader(),
+  })
+
+  if (response.status === 401) {
+    throw new UnauthorizedError()
+  }
 
   if (!response.ok) {
     throw new Error(

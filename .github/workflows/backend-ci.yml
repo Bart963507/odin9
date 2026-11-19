@@ -53,6 +53,8 @@ jobs:
           - 5432:5432
     env:
       DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/postgres
+      SITE_PASSWORD: ci-unused-password
+      JWT_SECRET: ci-unused-secret-at-least-32-characters
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v10.3.3

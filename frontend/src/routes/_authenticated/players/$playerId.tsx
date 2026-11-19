@@ -7,7 +7,7 @@ import { eventsQueryOptions } from '#/features/events/eventsQuery'
 import { appearancesQueryOptions } from '#/features/appearances/appearancesQuery'
 import { PlayerProfile } from '#/features/players/playerProfile'
 
-export const Route = createFileRoute('/players/$playerId')({
+export const Route = createFileRoute('/_authenticated/players/$playerId')({
   component: PlayerPage,
   pendingComponent: () => <Loader />,
   errorComponent: ({ error }) => (

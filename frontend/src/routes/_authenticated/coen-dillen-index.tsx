@@ -16,7 +16,7 @@ import {
 } from '#/features/coenDillen/scaleCoenDillen'
 import { CoenDillenChart } from '#/features/coenDillen/components/coenDillenChart/coenDillenChart'
 
-export const Route = createFileRoute('/coen-dillen-index')({
+export const Route = createFileRoute('/_authenticated/coen-dillen-index')({
   component: CoenDillenIndexPage,
   pendingComponent: () => <Loader />,
   errorComponent: ({ error }) => (

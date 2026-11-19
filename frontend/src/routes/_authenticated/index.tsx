@@ -3,7 +3,7 @@ import { Alert, Loader, Stack, Title } from '@mantine/core'
 import { usePlayerStats } from '#/features/statsTable/statsQuery'
 import { StatsTable } from '#/features/statsTable/statsTable'
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_authenticated/')({
   component: Home,
   pendingComponent: () => <Loader />,
   errorComponent: ({ error }) => (

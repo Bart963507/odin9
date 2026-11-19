@@ -5,7 +5,7 @@ import { usePlayerStats } from '#/features/statsTable/statsQuery'
 import { gamesQueryOptions } from '#/features/teamStatistics/gamesQuery'
 import { TeamStatisticsDashboard } from '#/features/teamStatistics/teamStatisticsDashboard'
 
-export const Route = createFileRoute('/team-statistics')({
+export const Route = createFileRoute('/_authenticated/team-statistics')({
   component: TeamStatisticsRoute,
   pendingComponent: () => <Loader />,
   errorComponent: ({ error }) => (

@@ -6,4 +6,5 @@ export const apiConfig = {
   stats: `${API_URL}/stats`,
   events: `${API_URL}/events`,
   appearances: `${API_URL}/appearances`,
+  login: `${API_URL}/auth/login`,
 } as const

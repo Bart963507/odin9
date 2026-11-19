@@ -3,6 +3,8 @@ import { z } from 'zod'
 import { playersQueryOptions } from '#/features/players/playersQuery'
 import type { Player } from '#/features/players/playersQuery'
 import { apiConfig } from '#/config/apiConfig'
+import { UnauthorizedError } from '#/features/auth/authErrors'
+import { authorizationHeader } from '#/features/auth/authToken'
 
 export type PlayerStats = {
   playerId: number
@@ -77,7 +79,14 @@ async function fetchStats({
 }: {
   signal: AbortSignal
 }): Promise<PlayerStats[]> {
-  const response = await fetch(apiConfig.stats, { signal })
+  const response = await fetch(apiConfig.stats, {
+    signal,
+    headers: authorizationHeader(),
+  })
+
+  if (response.status === 401) {
+    throw new UnauthorizedError()
+  }
 
   if (!response.ok) {
     throw new Error(

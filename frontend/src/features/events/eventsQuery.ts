@@ -1,6 +1,8 @@
 import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
 import { apiConfig } from '#/config/apiConfig'
+import { UnauthorizedError } from '#/features/auth/authErrors'
+import { authorizationHeader } from '#/features/auth/authToken'
 
 const eventTypeSchema = z.enum([
   'goal',
@@ -42,7 +44,14 @@ async function fetchEvents({
 }: {
   signal: AbortSignal
 }): Promise<GameEvent[]> {
-  const response = await fetch(apiConfig.events, { signal })
+  const response = await fetch(apiConfig.events, {
+    signal,
+    headers: authorizationHeader(),
+  })
+
+  if (response.status === 401) {
+    throw new UnauthorizedError()
+  }
 
   if (!response.ok) {
     throw new Error(

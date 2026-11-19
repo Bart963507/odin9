@@ -1,6 +1,8 @@
 import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
 import { apiConfig } from '#/config/apiConfig'
+import { UnauthorizedError } from '#/features/auth/authErrors'
+import { authorizationHeader } from '#/features/auth/authToken'
 
 export enum PlayerRole {
   Goalkeeper = 'Doelman',
@@ -39,7 +41,14 @@ async function fetchPlayers({
 }: {
   signal: AbortSignal
 }): Promise<Player[]> {
-  const response = await fetch(apiConfig.players, { signal })
+  const response = await fetch(apiConfig.players, {
+    signal,
+    headers: authorizationHeader(),
+  })
+
+  if (response.status === 401) {
+    throw new UnauthorizedError()
+  }
 
   if (!response.ok) {
     throw new Error(
