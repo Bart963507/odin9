@@ -26,9 +26,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Require API_URL variable
-        if: vars.API_URL == ''
+        if: ${{ !startsWith(vars.API_URL, 'https://') }}
         run: |
-          echo "::error::Set the repository variable API_URL to the Railway API domain"
+          echo "::error::Set the repository variable API_URL to the full Railway API URL, starting with https:// (for example https://odin9-production.up.railway.app)"
           exit 1
       - uses: actions/setup-node@v6
         with:
@@ -56,4 +56,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

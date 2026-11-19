@@ -108,5 +108,5 @@ After changing a model, create a migration with `uv run alembic revision --autog
 
 ## Deployment
 
-- **Frontend:** every push to `main` that changes `frontend/` builds and deploys to GitHub Pages. The build reads the repository variable `API_URL` (the Railway API domain, without a trailing slash) as `VITE_API_URL`, and fails when it isn't set.
+- **Frontend:** every push to `main` that changes `frontend/` builds and deploys to GitHub Pages. The build reads the repository variable `API_URL` as `VITE_API_URL`. It must be the full Railway API URL including `https://` and without a trailing slash, for example `https://odin9-production.up.railway.app`. Without `https://`, the browser treats it as a path on GitHub Pages and the API calls fail, so the build stops when the variable is missing or doesn't start with `https://`.
 - **Backend:** Railway deploys `backend/` from `main` once CI passes, and runs `alembic upgrade head` before starting the new version. The API needs the Railway variables `SITE_PASSWORD` (at least 8 characters) and `JWT_SECRET` (at least 32 characters) and won't start without them.
